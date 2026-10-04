@@ -1,0 +1,83 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title #{title || 'Exam Paper Printout'}
+
+    // Fonts
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap", rel="stylesheet")
+
+    // Tailwind
+    script(src="https://cdn.tailwindcss.com?plugins=typography")
+
+    // KaTeX CSS & JS
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css")
+    script(defer, src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js")
+    script(defer, src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js")
+
+    // Marked.js
+    script(src="https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+
+    link(rel="stylesheet", href="/css/style.css")
+
+    style.
+      @page {
+        size: A4 portrait;
+        margin: 1.5cm;
+      }
+      body {
+        font-family: 'Merriweather', serif;
+        background: #f8fafc;
+      }
+      @media print {
+        body {
+          background: #ffffff !important;
+        }
+        .no-print {
+          display: none !important;
+        }
+      }
+
+  body(class="min-h-screen p-4 sm:p-8")
+    // Action bar (Hidden when printing)
+    div(class="no-print max-w-4xl mx-auto mb-6 flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-200")
+      div
+        h2(class="text-lg font-bold text-slate-800 font-sans") Print / PDF Export Preview
+        p(class="text-xs text-slate-500 font-sans") Use the browser print dialog to save as PDF or print to physical printer.
+      div(class="flex items-center space-x-3")
+        button(onclick="window.close()", class="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition font-sans") Close Window
+        button(onclick="window.print()", class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition flex items-center space-x-2 font-sans")
+          svg(class="w-4 h-4 mr-1.5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+            path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z")
+          span Print / Save as PDF
+
+    // Printable Paper Container
+    main(id="paper-container", class="exam-sheet max-w-4xl mx-auto bg-white p-8 sm:p-12 rounded-xl shadow-lg border border-slate-200")
+      div(id="paper-content", class="prose max-w-none text-slate-800")
+        // Rendered via JS below
+
+    script.
+      const rawMarkdown = !{JSON.stringify(markdown)};
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('paper-content');
+        if (window.marked && rawMarkdown) {
+          container.innerHTML = marked.parse(rawMarkdown);
+          
+          // Render KaTeX math
+          setTimeout(() => {
+            if (window.renderMathInElement) {
+              renderMathInElement(container, {
+                delimiters: [
+                  { left: '$$', right: '$$', display: true },
+                  { left: '$', right: '$', display: false }
+                ],
+                throwOnError: false
+              });
+            }
+          }, 50);
+        }
+      });

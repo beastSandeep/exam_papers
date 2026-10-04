@@ -1,0 +1,50 @@
+[
+  {
+    "id": "paper_1791131222367",
+    "title": "Class 5 Mathematics (गणित)",
+    "subjectId": "5_maths",
+    "questionIds": [
+      "5_maths_sec_c_set_a_q1",
+      "5_maths_sec_c_set_a_q2",
+      "5_maths_sec_c_set_a_q3",
+      "5_maths_sec_c_set_a_q4",
+      "5_maths_sec_c_set_a_q5",
+      "5_maths_sec_c_set_a_q6",
+      "5_maths_sec_e_set_a_q1",
+      "5_maths_sec_e_set_a_q1_alt",
+      "5_maths_sec_e_set_a_q2",
+      "5_maths_sec_e_set_a_q2_alt",
+      "5_maths_sec_b_set_a_q1",
+      "5_maths_sec_b_set_a_q2",
+      "5_maths_sec_b_set_a_q3",
+      "5_maths_sec_b_set_a_q4",
+      "5_maths_sec_b_set_a_q5",
+      "5_maths_sec_a_set_a_q2",
+      "5_maths_sec_a_set_a_q3",
+      "5_maths_sec_a_set_a_q4",
+      "5_maths_sec_d_set_b_q1",
+      "5_maths_sec_d_set_b_q2",
+      "5_maths_sec_d_set_b_q3",
+      "5_maths_sec_d_set_b_q4",
+      "5_maths_sec_a_set_a_q1",
+      "5_maths_sec_a_set_b_q1"
+    ],
+    "customMeta": {
+      "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
+      "examTitle": "HALF YEARLY EXAMINATION: 2025 – 26",
+      "setName": "",
+      "maxMarks": null,
+      "time": "2½ HOURS",
+      "includeInstructions": false,
+      "orPairs": {},
+      "customMarks": {
+        "5_maths_sec_a_set_a_q2": 1,
+        "5_maths_sec_a_set_a_q3": 1,
+        "5_maths_sec_a_set_a_q4": 1,
+        "5_maths_sec_a_set_a_q5": 1,
+        "5_maths_sec_a_set_a_q1": 1
+      }
+    },
+    "createdAt": "2026-10-04T16:27:02.367Z"
+  }
+]

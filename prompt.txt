@@ -1,0 +1,8 @@
+hey i go samples paper for my school half yearly papers, first read the note.txt for each folder according to class and subject and then and i have also included hindi and english pdf(from photos), so scan them and see what the question the have only add ncert question last in chapters, 
+try to make simple paper that most of the sutudent get good marks.
+
+when making paper put bilingual for every question so both hindi and english medium can do, make the final paper in .md file, include just question and important details(like subject, class, school, marks(50 for every subject)) only.
+
+skip for now :- 8th_Science
+
+agy --dangerously-skip-permissions --conversation=10928da7-194d-42c2-ad06-d68a0a0d25b0

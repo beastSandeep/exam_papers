@@ -1,0 +1,144 @@
+/* Custom Styles for Exam Paper Builder */
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Exam Paper Preview Typography */
+.exam-sheet {
+  background: #ffffff;
+  color: #1e293b;
+  font-family: 'Merriweather', Georgia, serif;
+  line-height: 1.7;
+}
+
+.exam-sheet h1 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.25rem;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.exam-sheet h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.75rem;
+  font-family: 'Inter', sans-serif;
+  color: #334155;
+}
+
+.exam-sheet h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1.5px solid #cbd5e1;
+  font-family: 'Inter', sans-serif;
+}
+
+.exam-sheet h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  font-family: 'Inter', sans-serif;
+  color: #475569;
+}
+
+.exam-sheet hr {
+  margin: 1rem 0;
+  border-color: #cbd5e1;
+}
+
+.exam-sheet p {
+  margin-bottom: 0.5rem;
+}
+
+/* Question layout & Indentation from Question Number */
+.exam-sheet .question-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  margin-bottom: 1.15rem !important;
+  line-height: 1.75 !important;
+}
+
+.exam-sheet .question-num {
+  font-weight: 800 !important;
+  min-width: 2.85rem !important;
+  max-width: 3.5rem !important;
+  flex-shrink: 0 !important;
+  padding-top: 0.05rem !important;
+  color: #0f172a !important;
+}
+
+.exam-sheet .question-body {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+}
+
+.exam-sheet .question-body p {
+  margin-bottom: 0.45rem !important;
+}
+
+.exam-sheet .question-body p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Horizontally centered OR divider */
+.exam-sheet .or-divider,
+.exam-sheet div[align="center"] {
+  text-align: center !important;
+  font-weight: 800 !important;
+  margin: 1.25rem auto !important;
+  letter-spacing: 0.06em !important;
+  font-size: 0.95rem !important;
+  color: #0f172a !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+/* KaTeX tweaks in exam sheet */
+.exam-sheet .katex-display {
+  margin: 0.75em 0 !important;
+  text-align: center;
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .exam-sheet {
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+  @page {
+    margin: 1.5cm 1.5cm 1.5cm 1.5cm;
+    size: A4 portrait;
+  }
+}
