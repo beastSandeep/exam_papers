@@ -1,0 +1,98 @@
+//- Add New Class / Subject Modal Component
+div(
+  x-show="addSubjectModalOpen",
+  x-cloak,
+  class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6"
+)
+  div(
+    class="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200 overflow-hidden"
+  )
+    // Modal Header
+    div(class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between")
+      div
+        h3(class="text-base font-bold text-white flex items-center gap-2")
+          span ➕ Add New Class & Subject
+        p(class="text-xs text-slate-400 mt-0.5") Create a new class syllabus blueprint and question bank
+      button(@click="addSubjectModalOpen = false", class="text-slate-400 hover:text-white p-1 rounded-lg transition")
+        svg(class="w-5 h-5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M6 18L18 6M6 6l12 12")
+
+    // Modal Form Body
+    div(class="p-6 space-y-4 bg-slate-50")
+      div(class="grid grid-cols-2 gap-3")
+        div
+          label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1") Class Level:
+          input(
+            type="text",
+            x-model="newSubClass",
+            placeholder="e.g. VIII, IX, 8, 9...",
+            class="w-full text-xs bg-white border border-slate-200 rounded-lg px-3 py-2 font-semibold text-slate-800 focus:ring-1 focus:ring-indigo-500"
+          )
+        div
+          label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1") Subject ID / Key:
+          input(
+            type="text",
+            x-model="newSubId",
+            placeholder="e.g. 8_maths, 9_science...",
+            class="w-full text-xs bg-white border border-slate-200 rounded-lg px-3 py-2 font-mono text-slate-800 focus:ring-1 focus:ring-indigo-500"
+          )
+
+      div
+        label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1") Display Name:
+        input(
+          type="text",
+          x-model="newSubName",
+          placeholder="e.g. Class 8 Mathematics (गणित)...",
+          class="w-full text-xs bg-white border border-slate-200 rounded-lg px-3 py-2 font-medium text-slate-800 focus:ring-1 focus:ring-indigo-500"
+        )
+
+      div
+        label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1") Official Subject Title:
+        input(
+          type="text",
+          x-model="newSubSubject",
+          placeholder="e.g. MATHEMATICS (गणित), SCIENCE (विज्ञान)...",
+          class="w-full text-xs bg-white border border-slate-200 rounded-lg px-3 py-2 font-medium text-slate-800 focus:ring-1 focus:ring-indigo-500"
+        )
+
+      div(class="grid grid-cols-2 gap-3")
+        div
+          label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1") Max Marks:
+          input(
+            type="number",
+            x-model.number="newSubMaxMarks",
+            class="w-full text-xs bg-white border border-slate-200 rounded-lg px-3 py-2 font-bold text-indigo-700 focus:ring-1 focus:ring-indigo-500"
+          )
+        div
+          label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1") Exam Duration:
+          input(
+            type="text",
+            x-model="newSubTime",
+            placeholder="2½ HOURS",
+            class="w-full text-xs bg-white border border-slate-200 rounded-lg px-3 py-2 font-semibold text-slate-800 focus:ring-1 focus:ring-indigo-500"
+          )
+
+      div
+        label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1") Paper Blueprint Structure:
+        select(
+          x-model="newSubPattern",
+          class="w-full text-xs bg-white border border-slate-200 rounded-lg px-3 py-2 font-medium text-slate-800 focus:ring-1 focus:ring-indigo-500"
+        )
+          option(value="maths") 📐 Standard Mathematics (5 Sections: Formulas, MCQ/TF, VSA, Short, Long)
+          option(value="science") 🔬 Standard Science (6 Sections: MCQ, Blanks, True/False, VSA, Short, Long)
+          option(value="language") 📚 Language / Comprehensive (4 Sections: Reading, Writing, Grammar, Literature)
+
+    // Modal Footer
+    div(class="px-6 py-3.5 bg-white border-t border-slate-200 flex items-center justify-end space-x-2")
+      button(
+        type="button",
+        @click="addSubjectModalOpen = false",
+        class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
+      ) Cancel
+      button(
+        type="button",
+        @click="submitNewSubject()",
+        :disabled="isSubmittingSubject",
+        class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md transition disabled:opacity-50"
+      )
+        span Save & Open Subject

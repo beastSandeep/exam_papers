@@ -1,0 +1,188 @@
+//- Left Column Question Bank Component
+div(class="space-y-5")
+  // Section Selector Tabs (Single-Question Type Mode)
+  div(class="bg-white rounded-2xl p-2 shadow-sm border border-slate-200/80")
+    div(class="flex flex-wrap items-center justify-between gap-2 px-2 pt-1 pb-2 border-b border-slate-100")
+      div
+        h3(class="text-xs font-bold text-slate-500 uppercase tracking-wider") Question Type / Section
+        p(class="text-xs text-slate-400") Select questions one type at a time to complete each section
+      div(class="flex flex-wrap items-center gap-2.5")
+        // Chapter Filter Dropdown
+        div(class="flex items-center space-x-1.5")
+          span(class="text-xs text-slate-500 font-semibold") Chapter:
+          select(
+            x-model="chapterFilter",
+            @change="persistFilterState()",
+            class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-700 font-medium focus:ring-1 focus:ring-indigo-500 max-w-[170px] sm:max-w-[210px] truncate"
+          )
+            option(value="all") All Chapters (सभी अध्याय)
+            template(x-for="ch in getAvailableChapters()", :key="ch")
+              option(:value="ch", x-text="ch")
+
+        // Set Filter Dropdown
+        div(class="flex items-center space-x-1.5")
+          span(class="text-xs text-slate-500 font-semibold") Set:
+          select(
+            x-model="variationFilter",
+            @change="persistFilterState()",
+            class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-slate-700 font-medium focus:ring-1 focus:ring-indigo-500"
+          )
+            option(value="all") All Sets & Sources
+            option(value="Set A") Set A Only
+            option(value="Set B") Set B Only
+            option(value="Set C") Set C Only
+            option(value="Textbook") Textbook Exercises Only
+            option(value="Custom") Custom / My Questions
+            option(value="Sample Paper") Sample / Drill
+
+    // Tab Buttons
+    div(class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-1.5 mt-2")
+      template(x-for="(sec, idx) in currentBlueprint.sections", :key="sec.key")
+        button(
+          type="button",
+          @click="selectSection(sec.key)",
+          :class="activeSectionKey === sec.key ? 'bg-indigo-50 text-indigo-700 border-indigo-300 font-semibold shadow-sm' : 'bg-slate-50/70 text-slate-600 hover:bg-slate-100 border-transparent'",
+          class="p-2.5 rounded-xl border text-left transition flex flex-col justify-between"
+        )
+          div(class="flex items-center justify-between w-full mb-1")
+            span(class="text-xs font-bold uppercase", x-text="'SEC ' + (idx + 1)")
+            // Status Badge
+            span(
+              :class="getSectionBadgeClass(sec.key)",
+              class="text-[10px] font-bold px-1.5 py-0.5 rounded-md",
+              x-text="getSectionSelectedCount(sec.key) + ' Qs'"
+            )
+          div(class="text-xs truncate text-slate-700 font-medium", x-text="sec.subTitle || sec.title")
+          div(class="text-[10px] text-slate-400 mt-1 flex justify-between")
+            span(x-text="'Def: ' + sec.marksEach + 'M'")
+
+  // Active Section Context Card
+  div(class="bg-indigo-900 text-white p-4 rounded-2xl shadow-sm border border-indigo-800 space-y-1")
+    div(class="flex items-center justify-between")
+      span(class="text-[11px] font-bold uppercase tracking-wider text-indigo-300" x-text="'Active Section Builder'")
+      span(
+        class="text-xs font-semibold px-2 py-0.5 rounded-md bg-indigo-800 text-indigo-100 border border-indigo-700",
+        x-text="getSectionSelectedCount(activeSectionKey) + ' questions picked'"
+      )
+    h3(class="text-base font-bold", x-text="getActiveSection().title")
+    p(class="text-xs text-indigo-200", x-text="getActiveSection().subTitle")
+    div(class="pt-2 flex flex-wrap items-center gap-3 border-t border-indigo-800/80 mt-2")
+      button(@click="quickPickSection(activeSectionKey, 'Set A')", class="text-[10px] text-emerald-300 hover:text-emerald-200 underline font-medium") + All from Set A
+      button(@click="quickPickSection(activeSectionKey, 'Set B')", class="text-[10px] text-sky-300 hover:text-sky-200 underline font-medium") + All from Set B
+      button(@click="promptSetSectionMarks(activeSectionKey)", class="text-[10px] text-amber-300 hover:text-amber-200 underline font-medium") ✎ Set marks for all in Sec
+      button(@click="openCreateQuestionModal(activeSectionKey)", class="text-[10px] text-indigo-200 hover:text-white underline font-semibold") ✨ + Create custom question
+
+  // Questions List for Active Section
+  div(class="space-y-3")
+    div(class="flex items-center justify-between text-xs text-slate-500 px-1")
+      span(x-text="'Showing ' + getFilteredQuestionsForActiveSection().length + ' available questions in question bank'")
+      div(class="flex items-center gap-2")
+        button(
+          type="button",
+          @click="openCreateQuestionModal(activeSectionKey)",
+          class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs flex items-center gap-1"
+        )
+          svg(class="w-3.5 h-3.5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+            path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M12 4v16m8-8H4")
+          span + Add Custom Question
+        span(class="text-slate-300") |
+        button(type="button", @click="clearActiveSection()", class="text-rose-600 hover:underline text-xs") Clear Section Picks
+
+    template(x-for="q in getFilteredQuestionsForActiveSection()", :key="q.id")
+      div(
+        @click="toggleQuestion(q.id, q.sectionKey)",
+        :class="isQuestionSelected(q.id) ? 'border-indigo-500 bg-indigo-50/40 shadow-sm ring-1 ring-indigo-500' : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'",
+        class="p-4 rounded-xl border transition cursor-pointer relative group space-y-2.5"
+      )
+        // Top Meta Row: Checkbox, Set, Marks & Chapter
+        div(class="flex items-center justify-between")
+          div(class="flex items-center space-x-2.5 flex-wrap gap-y-1")
+            input(
+              type="checkbox",
+              :checked="isQuestionSelected(q.id)",
+              @click.stop="toggleQuestion(q.id, q.sectionKey)",
+              class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 cursor-pointer"
+            )
+            // Set Pill
+            span(
+              :class="getSetBadgeClass(q.set)",
+              class="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider",
+              x-text="q.set"
+            )
+            // Editable Marks Field
+            div(
+              @click.stop,
+              class="flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10px] transition font-medium",
+              :class="customMarks[q.id] !== undefined ? 'bg-amber-50 border-amber-300 text-amber-900 ring-1 ring-amber-200' : 'bg-slate-100 border-slate-200 text-slate-700'"
+            )
+              span(class="text-[10px] text-slate-500 font-semibold") Marks:
+              input(
+                type="number",
+                min="0.5",
+                max="50",
+                step="0.5",
+                :value="getQuestionMarks(q.id)",
+                @input="setQuestionMarks(q.id, $event.target.value)",
+                title="Edit question marks (Click to customize)",
+                class="w-11 h-5 text-center font-bold text-xs bg-white border rounded px-0.5 py-0 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
+                :class="customMarks[q.id] !== undefined ? 'border-amber-400 text-amber-950 font-black' : 'border-slate-300 text-slate-800'"
+              )
+              template(x-if="customMarks[q.id] !== undefined")
+                button(
+                  @click.stop="resetQuestionMarks(q.id)",
+                  :title="'Reset to default (' + q.marks + ' M)'",
+                  class="text-rose-500 hover:text-rose-700 font-extrabold text-[11px] ml-0.5"
+                ) ✕
+            // Chapter Pill
+            span(x-show="q.chapter", class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200/80 flex items-center gap-1 max-w-[260px] truncate")
+              svg(class="w-3 h-3 text-indigo-500 shrink-0", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+                path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253")
+              span(class="truncate", x-text="q.chapter")
+            // Active OR Partner Badges
+            template(x-if="orPairs[q.id]")
+              span(class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1.5")
+                span 🔀 OR:
+                span(class="truncate max-w-[130px]", x-text="getQuestionPreview(orPairs[q.id])")
+                button(@click.stop="removeOrPair(q.id)", title="Remove OR pairing", class="text-rose-600 hover:text-rose-800 font-extrabold ml-0.5") ✕
+            template(x-if="isQuestionPairedAsAlternative(q.id)")
+              span(class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200 flex items-center gap-1")
+                span 🔗 Alternative OR Choice
+                button(@click.stop="unlinkAsAlternative(q.id)", title="Unlink OR choice", class="text-rose-600 hover:text-rose-800 font-extrabold ml-0.5") ✕
+
+          // Actions: Pair OR, Edit/Delete & Select/Deselect
+          div(class="flex items-center space-x-1.5 shrink-0")
+            template(x-if="q.set === 'Custom' || q.id.startsWith('custom_')")
+              div(class="flex items-center space-x-1")
+                button(
+                  @click.stop="openEditQuestionModal(q)",
+                  title="Edit this custom question",
+                  class="px-2 py-1 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300 transition text-xs font-semibold flex items-center gap-1"
+                )
+                  span ✎ Edit
+                button(
+                  @click.stop="deleteCustomQuestion(q.id)",
+                  title="Delete question permanently",
+                  class="p-1 rounded-lg border border-slate-200 bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition text-xs"
+                )
+                  svg(class="w-3.5 h-3.5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+                    path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16")
+
+            // Pair Internal Choice (OR) Button
+            button(
+              @click.stop="openPairingModal(q.id)",
+              title="Add or change alternative choice (OR / अथवा)",
+              :class="orPairs[q.id] ? 'bg-amber-100 text-amber-800 border-amber-300 font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border-slate-200'",
+              class="px-2 py-1 rounded-lg border text-xs transition flex items-center space-x-1"
+            )
+              span 🔀
+              span(x-text="orPairs[q.id] ? 'Change OR' : 'Pair OR'")
+
+            span(
+              class="text-xs font-bold px-2 py-1 rounded-lg transition",
+              :class="isQuestionSelected(q.id) ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 group-hover:bg-indigo-100 group-hover:text-indigo-700'",
+              x-text="isQuestionSelected(q.id) ? 'Selected' : 'Pick'"
+            )
+
+        // Question Content Display (Bilingual)
+        div(class="text-slate-800 text-sm sm:text-base leading-relaxed pl-6")
+          div(class="question-render font-serif whitespace-pre-line", x-html="renderQuestionContent(q.content)")

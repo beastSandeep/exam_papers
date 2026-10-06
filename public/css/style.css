@@ -119,11 +119,211 @@
   text-align: center;
 }
 
-/* Print Styles */
+/* ===================================================
+   Exam Sheet & Question Tables (Magic Squares & Data)
+   =================================================== */
+
+/* General Exam Sheet Tables (Match columns, data tables, etc.) */
+.exam-sheet table,
+.prose table,
+.question-render table {
+  width: auto !important;
+  max-width: 100% !important;
+  margin: 0.85rem auto !important;
+  border-collapse: collapse !important;
+  border: 1.5px solid #0f172a !important;
+  background-color: #ffffff !important;
+  font-size: 0.92rem !important;
+  display: table !important;
+}
+
+.exam-sheet table th,
+.exam-sheet table td,
+.prose table th,
+.prose table td,
+.question-render table th,
+.question-render table td {
+  border: 1.2px solid #0f172a !important;
+  padding: 0.35rem 0.75rem !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.exam-sheet table th,
+.prose table th,
+.question-render table th {
+  background-color: #f1f5f9 !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+}
+
+/* Magic Square & Number Grid Tables (3x3, 4x4 math squares) */
+.exam-sheet .magic-square-table,
+.prose .magic-square-table,
+.question-render .magic-square-table,
+table.magic-square-table {
+  width: auto !important;
+  margin: 0.85rem auto !important;
+  border-collapse: collapse !important;
+  border: 2.5px solid #000000 !important;
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+  display: table !important;
+}
+
+.exam-sheet .magic-square-table tr,
+.prose .magic-square-table tr,
+.question-render .magic-square-table tr,
+table.magic-square-table tr {
+  height: 48px !important;
+}
+
+.exam-sheet .magic-square-table th,
+.exam-sheet .magic-square-table td,
+.prose .magic-square-table th,
+.prose .magic-square-table td,
+.question-render .magic-square-table th,
+.question-render .magic-square-table td,
+table.magic-square-table th,
+table.magic-square-table td {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
+  border: 2px solid #000000 !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
+  font-family: 'Merriweather', serif !important;
+  color: #000000 !important;
+  padding: 0 !important;
+  line-height: 48px !important;
+  box-sizing: border-box !important;
+  background-color: #ffffff !important;
+}
+
+/* Blank fillable cell in magic square */
+.exam-sheet .magic-square-table td.blank-cell,
+.prose .magic-square-table td.blank-cell,
+.question-render .magic-square-table td.blank-cell,
+table.magic-square-table td.blank-cell {
+  background-color: #ffffff !important;
+  color: transparent !important;
+}
+
+/* ===================================================
+   Paper Saver Print Mode & 2-Column Economy Styles
+   =================================================== */
+
+/* Paper Saver Compact Mode (Saves 35-45% paper) */
+.exam-sheet.paper-saver {
+  font-size: 10pt !important;
+  line-height: 1.28 !important;
+  padding: 1.25rem sm:1.5rem !important;
+}
+
+.exam-sheet.paper-saver h1 {
+  font-size: 1.15rem !important;
+  margin-bottom: 0.15rem !important;
+}
+
+.exam-sheet.paper-saver h2 {
+  font-size: 0.98rem !important;
+  margin-bottom: 0.35rem !important;
+}
+
+.exam-sheet.paper-saver h3 {
+  font-size: 0.92rem !important;
+  margin-top: 0.8rem !important;
+  margin-bottom: 0.3rem !important;
+  padding-bottom: 0.15rem !important;
+}
+
+.exam-sheet.paper-saver h4 {
+  font-size: 0.85rem !important;
+  margin-top: 0.35rem !important;
+  margin-bottom: 0.2rem !important;
+}
+
+.exam-sheet.paper-saver hr {
+  margin: 0.5rem 0 !important;
+}
+
+.exam-sheet.paper-saver p {
+  margin-bottom: 0.22rem !important;
+}
+
+.exam-sheet.paper-saver .question-item {
+  margin-bottom: 0.38rem !important;
+  line-height: 1.3 !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.exam-sheet.paper-saver .question-num {
+  min-width: 2.2rem !important;
+  max-width: 2.6rem !important;
+  font-size: 9.5pt !important;
+}
+
+.exam-sheet.paper-saver .question-body p {
+  margin-bottom: 0.18rem !important;
+}
+
+.exam-sheet.paper-saver .or-divider,
+.exam-sheet.paper-saver div[align="center"] {
+  margin: 0.45rem auto !important;
+  font-size: 8.5pt !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.exam-sheet.paper-saver .katex-display {
+  margin: 0.35em 0 !important;
+}
+
+/* 2-Column Economy Mode (Saves 50-60% paper) */
+.exam-sheet.two-column-print {
+  font-size: 9.5pt !important;
+  line-height: 1.24 !important;
+}
+
+.exam-sheet.two-column-print h1,
+.exam-sheet.two-column-print h2,
+.exam-sheet.two-column-print hr {
+  column-span: all !important;
+}
+
+.exam-sheet.two-column-print .exam-content-flow {
+  column-count: 2 !important;
+  column-gap: 8mm !important;
+  column-rule: 1px dashed #cbd5e1 !important;
+}
+
+.exam-sheet.two-column-print .question-item {
+  margin-bottom: 0.35rem !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+.exam-sheet.two-column-print h3,
+.exam-sheet.two-column-print h4 {
+  break-after: avoid !important;
+  page-break-after: avoid !important;
+}
+
+/* ===================================================
+   Print Styles & Page Rules
+   =================================================== */
 @media print {
   body {
     background: white !important;
     color: black !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
   .no-print {
     display: none !important;
@@ -136,9 +336,83 @@
     padding: 0 !important;
     margin: 0 !important;
     max-width: 100% !important;
+    border: none !important;
+  }
+  .question-item {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  .or-divider {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
   @page {
-    margin: 1.5cm 1.5cm 1.5cm 1.5cm;
+    margin: 1.2cm 1.2cm 1.2cm 1.2cm;
     size: A4 portrait;
   }
+}
+
+/* Paper saver print page margins */
+body.mode-compact,
+body.mode-compact .exam-sheet {
+  font-size: 10pt !important;
+  line-height: 1.28 !important;
+}
+
+@media print {
+  body.mode-compact,
+  body.mode-compact .exam-sheet,
+  .exam-sheet.paper-saver {
+    font-size: 10pt !important;
+    line-height: 1.28 !important;
+  }
+  body.mode-compact @page,
+  @page {
+    margin: 8mm 10mm 8mm 10mm;
+    size: A4 portrait;
+  }
+
+  .exam-sheet table,
+  .prose table,
+  .question-render table,
+  table.magic-square-table {
+    border-color: #000000 !important;
+  }
+  .exam-sheet table th,
+  .exam-sheet table td,
+  .prose table th,
+  .prose table td,
+  .question-render table th,
+  .question-render table td,
+  table.magic-square-table th,
+  table.magic-square-table td {
+    border-color: #000000 !important;
+    color: #000000 !important;
+  }
+}
+
+/* Paper-saver compact table scaling */
+.exam-sheet.paper-saver table,
+body.mode-compact table {
+  margin: 0.5rem auto !important;
+  font-size: 0.85rem !important;
+}
+
+.exam-sheet.paper-saver .magic-square-table tr,
+body.mode-compact .magic-square-table tr {
+  height: 38px !important;
+}
+
+.exam-sheet.paper-saver .magic-square-table th,
+.exam-sheet.paper-saver .magic-square-table td,
+body.mode-compact .magic-square-table th,
+body.mode-compact .magic-square-table td {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  max-width: 38px !important;
+  max-height: 38px !important;
+  font-size: 1.05rem !important;
+  line-height: 38px !important;
 }

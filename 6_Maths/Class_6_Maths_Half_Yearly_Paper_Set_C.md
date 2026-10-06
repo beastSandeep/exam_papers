@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – C)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – C)
 
 **CLASS : VI**  
 **SUBJECT : MATHEMATICS (गणित)**  
@@ -84,13 +84,13 @@
 **दो सह-अभाज्य (co-prime) संख्याओं का महत्तम समापवर्तक (HCF) सदैव _______ होता है।**
 
 **Q8. On a number line, negative integers always lie to the _______ of zero.**  
-**संख्या रेखा पर ऋणात्मक पूर्णांक शून्य के _______ (बाईं ओर / दाईं ओर) स्थित होते हैं।**
+**संख्या रेखा पर ऋणात्मक पूर्णांक शून्य के _______ स्थित होते हैं।**
 
 **Q9. A fraction whose numerator is less than its denominator is called a _______ fraction.**  
 **वह भिन्न जिसका अंश उसके हर से छोटा होता है, _______ भिन्न (उचित भिन्न) कहलाती है।**
 
 **Q10. An algebraic expression consisting of three unlike terms is called a _______.**  
-**तीन असमान पदों वाले बीजीय व्यंजक को _______ (त्रिपद) कहते हैं।**
+**तीन असमान पदों वाले बीजीय व्यंजक को _______ कहते हैं।**
 
 ---
 

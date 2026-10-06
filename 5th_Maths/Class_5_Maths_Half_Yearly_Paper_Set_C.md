@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – C)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – C)
 
 **CLASS : V**  
 **SUBJECT : MATHEMATICS (गणित)**  
@@ -78,13 +78,13 @@
 **(5 × 1 = 5 Marks)**
 
 **Q6. An angle of measure $90^\circ$ is called a _______ angle.**  
-**$90^\circ$ माप वाले कोण को _______ (समकोण) कहते हैं।**
+**$90^\circ$ माप वाले कोण को _______ कहते हैं।**
 
 **Q7. The formula for the area of a square with side $s$ is: $\text{Area} = \underline{\hspace{1.5cm}} \times \underline{\hspace{1.5cm}}$.**  
 **भुजा $s$ वाले वर्ग के क्षेत्रफल का सूत्र है: क्षेत्रफल $= \underline{\hspace{1.5cm}} \times \underline{\hspace{1.5cm}}$।**
 
 **Q8. A figure that looks identical when folded along a dividing line possesses a line of _______.**  
-**वह आकृति जो किसी विभाजक रेखा के अनुदिश मोड़े जाने पर बिल्कुल एक जैसी दिखती है, उसमें _______ (सममिति) की रेखा होती है।**
+**वह आकृति जो किसी विभाजक रेखा के अनुदिश मोड़े जाने पर बिल्कुल एक जैसी दिखती है, उसमें _______ की रेखा होती है।**
 
 **Q9. The unfolded net of a closed cube consists of _______ equal square faces.**  
 **एक बंद घन के खुले हुए जाल (net) में कुल _______ समान वर्गाकार फलक होते हैं।**
@@ -139,10 +139,11 @@ $$100, \quad 90, \quad 80, \quad 70, \quad \underline{\hspace{1.5cm}}, \quad \un
 **Q19. Complete the given $3 \times 3$ magic square using numbers from $1$ to $9$ so that the sum of each row, column, and diagonal is $15$:**  
 **$1$ से $9$ तक की संख्याओं का उपयोग करते हुए दिए गए $3 \times 3$ के जादुई वर्ग को पूरा कीजिए ताकि प्रत्येक पंक्ति, स्तंभ और विकर्ण का योग $15$ हो:**
 
-| $4$ | $9$ | $2$ |
-| :---: | :---: | :---: |
-| $3$ | $5$ | $7$ |
-| $\underline{\hspace{1cm}}$ | $1$ | $\underline{\hspace{1cm}}$ |
+<table class="magic-square-table">
+  <tr><td>4</td><td>9</td><td>2</td></tr>
+  <tr><td>3</td><td>5</td><td>7</td></tr>
+  <tr><td class="blank-cell">&nbsp;</td><td>1</td><td class="blank-cell">&nbsp;</td></tr>
+</table>
 
 **Q20. Solve the following:**  
 **निम्नलिखित को हल कीजिए:**  

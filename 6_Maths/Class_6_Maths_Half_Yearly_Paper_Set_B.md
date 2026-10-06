@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – B)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – B)
 
 **CLASS : VI**  
 **SUBJECT : MATHEMATICS (गणित)**  
@@ -90,7 +90,7 @@
 **समान हर वाली दो भिन्नों को _______ भिन्न कहा जाता है।**
 
 **Q10. An algebraic expression consisting of only one term is called a _______.**  
-**केवल एक पद वाले बीजीय व्यंजक को _______ (एकपदी) कहते हैं।**
+**केवल एक पद वाले बीजीय व्यंजक को _______ कहते हैं।**
 
 ---
 

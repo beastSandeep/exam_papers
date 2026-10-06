@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – B)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – B)
 
 **CLASS : VII**  
 **SUBJECT : SCIENCE (विज्ञान)**  
@@ -68,19 +68,19 @@
 **(5 × 1 = 5 Marks)**
 
 **(i) The process of depositing a protective layer of zinc on iron to prevent rusting is called _______.**  
-**लोहे को जंग से बचाने के लिए उस पर जस्ते (जिंक) की परत चढ़ाने की प्रक्रिया को _______ (यशद लेपन) कहते हैं।**
+**लोहे को जंग से बचाने के लिए उस पर जस्ते (जिंक) की परत चढ़ाने की प्रक्रिया को _______ कहते हैं।**
 
 **(ii) The master gland that controls the secretions of other endocrine glands in the body is the _______ gland.**  
 **शरीर की अन्य अंतःस्रावी ग्रंथियों के स्राव को नियंत्रित करने वाली मास्टर ग्रंथि _______ ग्रंथि है।**
 
 **(iii) Transfer of heat in liquids and gases takes place primarily by the process of _______.**  
-**द्रवों तथा गैसों में ऊष्मा का स्थानांतरण मुख्य रूप से _______ (संवहन) द्वारा होता है।**
+**द्रवों तथा गैसों में ऊष्मा का स्थानांतरण मुख्य रूप से _______ द्वारा होता है।**
 
 **(iv) An instrument fitted in vehicles that records and displays the total distance travelled is called an _______.**  
 **वाहनों में लगा वह यंत्र जो तय की गई कुल दूरी को मापता और प्रदर्शित करता है, _______ कहलाता है।**
 
 **(v) The organ where the complete digestion of carbohydrates, proteins, and fats takes place is the _______.**  
-**वह अंग जहाँ कार्बोहाइड्रेट, प्रोटीन और वसा का संपूर्ण पाचन होता है, _______ (छोटी आंत) है।**
+**वह अंग जहाँ कार्बोहाइड्रेट, प्रोटीन और वसा का संपूर्ण पाचन होता है, _______ है।**
 
 ---
 

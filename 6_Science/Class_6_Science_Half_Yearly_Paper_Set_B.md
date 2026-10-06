@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – B)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – B)
 
 **CLASS : VI**  
 **SUBJECT : SCIENCE (विज्ञान)**  
@@ -68,7 +68,7 @@
 **(5 × 1 = 5 Marks)**
 
 **(i) 1 metre (m) is equal to _______ centimetres (cm).**  
-**1 मीटर (मी) _______ सेंटीमीटर (सेमी) के बराबर होता है।**
+**1 मीटर _______ सेंटीमीटर (सेमी) के बराबर होता है।**
 
 **(ii) Materials through which objects can be seen, but not clearly, are called _______ materials.**  
 **वे पदार्थ जिनसे होकर वस्तुओं को देखा तो जा सकता है परंतु स्पष्ट नहीं, _______ पदार्थ कहलाते हैं।**

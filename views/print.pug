@@ -24,13 +24,9 @@ html(lang="en")
     link(rel="stylesheet", href="/css/style.css")
 
     style.
-      @page {
-        size: A4 portrait;
-        margin: 1.5cm;
-      }
       body {
         font-family: 'Merriweather', serif;
-        background: #f8fafc;
+        background: #f1f5f9;
       }
       @media print {
         body {
@@ -41,33 +37,92 @@ html(lang="en")
         }
       }
 
-  body(class="min-h-screen p-4 sm:p-8")
+  body(class="min-h-screen p-3 sm:p-6", class=(customMeta && customMeta.printLayoutMode === 'compact' ? 'mode-compact' : ''))
     // Action bar (Hidden when printing)
-    div(class="no-print max-w-4xl mx-auto mb-6 flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-200")
+    div(class="no-print max-w-4xl mx-auto mb-5 flex flex-wrap items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-xl shadow-sm border border-slate-200")
       div
-        h2(class="text-lg font-bold text-slate-800 font-sans") Print / PDF Export Preview
-        p(class="text-xs text-slate-500 font-sans") Use the browser print dialog to save as PDF or print to physical printer.
-      div(class="flex items-center space-x-3")
-        button(onclick="window.close()", class="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition font-sans") Close Window
-        button(onclick="window.print()", class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition flex items-center space-x-2 font-sans")
-          svg(class="w-4 h-4 mr-1.5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+        h2(class="text-base font-bold text-slate-800 font-sans flex items-center gap-2")
+          span 🖨️ Print & PDF Export Studio
+          span(id="layout-indicator", class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200") Paper Saver Mode
+        p(class="text-xs text-slate-500 font-sans mt-0.5") Select layout density below, then click Print to save as PDF.
+
+      div(class="flex items-center flex-wrap gap-2")
+        // Layout Mode Switcher
+        div(class="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200")
+          button(
+            id="btn-mode-standard",
+            onclick="setLayoutMode('standard')",
+            class="px-2.5 py-1 text-xs font-semibold rounded transition font-sans text-slate-600 hover:text-slate-900"
+          ) 📄 Standard
+          button(
+            id="btn-mode-compact",
+            onclick="setLayoutMode('compact')",
+            class="px-2.5 py-1 text-xs font-semibold rounded transition font-sans bg-emerald-600 text-white shadow-xs"
+          ) 🌿 Paper Saver
+          button(
+            id="btn-mode-twocolumn",
+            onclick="setLayoutMode('twocolumn')",
+            class="px-2.5 py-1 text-xs font-semibold rounded transition font-sans text-slate-600 hover:text-slate-900"
+          ) 📰 2-Column
+
+        button(onclick="window.close()", class="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition font-sans") Close
+        button(onclick="window.print()", class="px-4 py-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition flex items-center gap-1.5 font-sans")
+          svg(class="w-3.5 h-3.5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
             path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z")
-          span Print / Save as PDF
+          span Print / Save PDF
 
     // Printable Paper Container
-    main(id="paper-container", class="exam-sheet max-w-4xl mx-auto bg-white p-8 sm:p-12 rounded-xl shadow-lg border border-slate-200")
+    main(
+      id="paper-container",
+      class="exam-sheet max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-lg border border-slate-200 transition-all"
+    )
       div(id="paper-content", class="prose max-w-none text-slate-800")
         // Rendered via JS below
 
     script.
       const rawMarkdown = !{JSON.stringify(markdown)};
+      const initialCustomMeta = !{JSON.stringify(customMeta || {})};
+      let currentLayout = initialCustomMeta.printLayoutMode || 'compact';
+
+      function setLayoutMode(mode) {
+        currentLayout = mode;
+        const container = document.getElementById('paper-container');
+        const indicator = document.getElementById('layout-indicator');
+        const btnStandard = document.getElementById('btn-mode-standard');
+        const btnCompact = document.getElementById('btn-mode-compact');
+        const btnTwoCol = document.getElementById('btn-mode-twocolumn');
+
+        // Reset classes
+        container.classList.remove('paper-saver', 'two-column-print');
+        document.body.classList.remove('mode-compact');
+        [btnStandard, btnCompact, btnTwoCol].forEach(b => {
+          b.className = 'px-2.5 py-1 text-xs font-semibold rounded transition font-sans text-slate-600 hover:text-slate-900';
+        });
+
+        if (mode === 'compact') {
+          container.classList.add('paper-saver');
+          document.body.classList.add('mode-compact');
+          btnCompact.className = 'px-2.5 py-1 text-xs font-semibold rounded transition font-sans bg-emerald-600 text-white shadow-xs';
+          indicator.textContent = '🌿 Paper Saver Mode (Ultra-Compact)';
+          indicator.className = 'text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200';
+        } else if (mode === 'twocolumn') {
+          container.classList.add('paper-saver', 'two-column-print');
+          document.body.classList.add('mode-compact');
+          btnTwoCol.className = 'px-2.5 py-1 text-xs font-semibold rounded transition font-sans bg-amber-600 text-white shadow-xs';
+          indicator.textContent = '📰 2-Column Economy Mode';
+          indicator.className = 'text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200';
+        } else {
+          btnStandard.className = 'px-2.5 py-1 text-xs font-semibold rounded transition font-sans bg-indigo-600 text-white shadow-xs';
+          indicator.textContent = '📄 Standard Spacing Mode';
+          indicator.className = 'text-[11px] font-semibold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 border border-indigo-200';
+        }
+      }
 
       window.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('paper-content');
         if (window.marked && rawMarkdown) {
           container.innerHTML = marked.parse(rawMarkdown);
           
-          // Render KaTeX math
           setTimeout(() => {
             if (window.renderMathInElement) {
               renderMathInElement(container, {
@@ -80,4 +135,7 @@ html(lang="en")
             }
           }, 50);
         }
+
+        // Apply chosen layout mode
+        setLayoutMode(currentLayout);
       });

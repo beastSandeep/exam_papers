@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – A)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – A)
 
 **CLASS : VI**  
 **SUBJECT : SCIENCE (विज्ञान)**  
@@ -68,7 +68,7 @@
 **(5 × 1 = 5 Marks)**
 
 **(i) 1 centimetre (cm) is equal to _______ millimetres (mm).**  
-**1 सेंटीमीटर (सेमी) _______ मिलीमीटर (मिमी) के बराबर होता है।**
+**1 सेंटीमीटर _______ मिलीमीटर (मिमी) के बराबर होता है।**
 
 **(ii) Materials that do not allow light to pass through them are called _______ materials.**  
 **वे पदार्थ जिनसे होकर प्रकाश आर-पार नहीं गुजर सकता, _______ पदार्थ कहलाते हैं।**

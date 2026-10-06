@@ -1,0 +1,621 @@
+//- Create Custom Question from Scratch Modal
+div(
+  x-show="createQuestionModalOpen",
+  x-cloak,
+  class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6"
+)
+  div(
+    class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col border border-slate-200 overflow-hidden"
+  )
+    // Modal Header
+    div(class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0")
+      div
+        h3(class="text-base font-bold text-white flex items-center gap-2")
+          span(x-text="isEditingQuestion ? '✎ Edit Question in Bank' : '✨ Create Custom Question from Scratch'")
+          span(class="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30") Question Bank
+        p(class="text-xs text-slate-400 mt-0.5") Compose a bilingual question with instant LaTeX math formatting and save it directly to the question bank.
+      button(@click="closeCreateQuestionModal()", class="text-slate-400 hover:text-white p-1 rounded-lg transition")
+        svg(class="w-5 h-5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M6 18L18 6M6 6l12 12")
+
+    // Modal Scrollable Form Body
+    div(class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-5 bg-slate-50")
+      
+      // Row 1: Target Subject, Section & Marks
+      div(class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm")
+        // Class / Subject
+        div
+          label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1") Class & Subject:
+          select(
+            x-model="newQuestionSubjectId",
+            @change="onNewQuestionSubjectChange()",
+            class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 font-medium text-slate-800 focus:ring-1 focus:ring-indigo-500"
+          )
+            template(x-for="sub in subjectsList", :key="sub.id")
+              option(:value="sub.id", x-text="'Class ' + sub.class + ' - ' + sub.name")
+
+        // Section / Type
+        div
+          label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1") Section / Type:
+          select(
+            x-model="newQuestionSectionKey",
+            @change="onNewQuestionSectionChange()",
+            class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 font-medium text-slate-800 focus:ring-1 focus:ring-indigo-500"
+          )
+            template(x-for="sec in getSectionsForSubject(newQuestionSubjectId)", :key="sec.key")
+              option(:value="sec.key", x-text="sec.title.replace('### ', '') + ' (' + (sec.subTitle ? sec.subTitle.split(' / ')[0] : '') + ')'")
+
+        // Marks
+        div
+          label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1") Marks:
+          div(class="flex items-center space-x-2")
+            input(
+              type="number",
+              min="0.5",
+              max="50",
+              step="0.5",
+              x-model.number="newQuestionMarks",
+              @input="updateCreateQuestionPreview()",
+              class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 font-bold text-indigo-700 focus:ring-1 focus:ring-indigo-500"
+            )
+            span(class="text-xs text-slate-500 font-semibold shrink-0") Marks
+
+      // Row 2: Chapter Selection
+      div(class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2")
+        label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider") Chapter (अध्याय):
+        div(class="grid grid-cols-1 sm:grid-cols-2 gap-3")
+          select(
+            x-model="newQuestionChapter",
+            @change="updateCreateQuestionPreview()",
+            class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 font-medium text-slate-800 focus:ring-1 focus:ring-indigo-500"
+          )
+            option(value="") -- Select Existing Chapter --
+            template(x-for="ch in getAvailableChapters()", :key="ch")
+              option(:value="ch", x-text="ch")
+            option(value="__custom__") ➕ Enter New / Custom Chapter Name...
+          
+          div(x-show="newQuestionChapter === '__custom__' || !newQuestionChapter")
+            input(
+              type="text",
+              x-model="newQuestionCustomChapter",
+              placeholder="Enter chapter name (e.g. Ch 2: Fractions)...",
+              class="w-full text-xs bg-slate-50 border border-indigo-200 rounded-lg px-2.5 py-2 font-medium text-slate-800 focus:ring-1 focus:ring-indigo-500"
+            )
+
+      // Section Archetype Studio & Editor
+      div(class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3.5")
+        // Archetype Switcher Bar
+        div(class="space-y-1.5 border-b border-slate-100 pb-3")
+          div(class="flex items-center justify-between")
+            label(class="text-[11px] font-bold text-slate-500 uppercase tracking-wider") Question Format / Archetype (प्रश्न प्रारूप):
+            span(class="text-[10px] text-slate-400 italic hidden sm:inline") Auto-detected from section, click to switch
+          
+          div(class="grid grid-cols-2 xs:grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-1.5")
+            button(
+              type="button",
+              @click="setArchetype('mcq')",
+              :class="activeArchetype === 'mcq' ? 'bg-indigo-600 text-white font-bold shadow-xs ring-2 ring-indigo-600' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'",
+              class="px-2 py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1"
+            )
+              span 🔘
+              span MCQ
+            button(
+              type="button",
+              @click="setArchetype('fib')",
+              :class="activeArchetype === 'fib' ? 'bg-indigo-600 text-white font-bold shadow-xs ring-2 ring-indigo-600' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'",
+              class="px-2 py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1"
+            )
+              span 📝
+              span Blanks
+            button(
+              type="button",
+              @click="setArchetype('tf')",
+              :class="activeArchetype === 'tf' ? 'bg-indigo-600 text-white font-bold shadow-xs ring-2 ring-indigo-600' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'",
+              class="px-2 py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1"
+            )
+              span ✓/✗
+              span True/False
+            button(
+              type="button",
+              @click="setArchetype('vsa')",
+              :class="activeArchetype === 'vsa' ? 'bg-indigo-600 text-white font-bold shadow-xs ring-2 ring-indigo-600' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'",
+              class="px-2 py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1"
+            )
+              span 💡
+              span Formula/VSA
+            button(
+              type="button",
+              @click="setArchetype('sa')",
+              :class="activeArchetype === 'sa' ? 'bg-indigo-600 text-white font-bold shadow-xs ring-2 ring-indigo-600' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'",
+              class="px-2 py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1"
+            )
+              span ✏️
+              span Short/Calc
+            button(
+              type="button",
+              @click="setArchetype('la')",
+              :class="activeArchetype === 'la' ? 'bg-indigo-600 text-white font-bold shadow-xs ring-2 ring-indigo-600' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'",
+              class="px-2 py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1"
+            )
+              span 📑
+              span Long Multi
+            button(
+              type="button",
+              @click="setArchetype('match')",
+              :class="activeArchetype === 'match' ? 'bg-indigo-600 text-white font-bold shadow-xs ring-2 ring-indigo-600' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'",
+              class="px-2 py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1"
+            )
+              span 🔗
+              span Match Cols
+            button(
+              type="button",
+              @click="setArchetype('raw')",
+              :class="activeArchetype === 'raw' ? 'bg-indigo-600 text-white font-bold shadow-xs ring-2 ring-indigo-600' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'",
+              class="px-2 py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1"
+            )
+              span ⚡
+              span Raw MD
+
+        // Enhanced Math Quick-Insert Toolbar with Visual Badges
+        div(class="bg-slate-100/90 p-2.5 rounded-xl border border-slate-200 space-y-1.5")
+          div(class="flex items-center justify-between")
+            span(class="text-[11px] font-bold text-slate-600 flex items-center gap-1.5")
+              span 🔢
+              span Math Quick-Insert Toolbar:
+            span(class="text-[10px] text-slate-400 italic") Click symbol to insert at cursor position
+          
+          div(class="flex flex-wrap items-center gap-1.5 text-xs")
+            button(type="button", @click="insertMathSymbol('\\\\frac{a}{b}')", title="Insert Fraction (a/b)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-mono font-bold text-indigo-600") a/b
+              span Fraction
+            button(type="button", @click="insertMathSymbol('^{2}')", title="Insert Power / Superscript (x²)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-mono font-bold text-indigo-600") x²
+              span Power
+            button(type="button", @click="insertMathSymbol('\\\\sqrt{x}')", title="Insert Square Root (√x)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-mono font-bold text-indigo-600") √x
+              span Sqrt
+            button(type="button", @click="insertMathSymbol('\\\\times ')", title="Insert Multiply (×)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-bold text-indigo-600") ×
+              span Times
+            button(type="button", @click="insertMathSymbol('\\\\div ')", title="Insert Divide (÷)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-bold text-indigo-600") ÷
+              span Div
+            button(type="button", @click="insertMathSymbol('\\\\pm ')", title="Insert Plus-Minus (±)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-bold text-indigo-600") ±
+              span Plus/Minus
+            button(type="button", @click="insertMathSymbol('\\\\pi ')", title="Insert Pi (π)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-serif font-bold text-indigo-600") π
+              span Pi
+            button(type="button", @click="insertMathSymbol('^{\\\\circ}')", title="Insert Degree (°)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-bold text-indigo-600") °
+              span Degree
+            button(type="button", @click="insertMathSymbol('\\\\le ')", title="Insert Less Than Equal (≤)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-bold text-indigo-600") ≤
+              span Le
+            button(type="button", @click="insertMathSymbol('\\\\ge ')", title="Insert Greater Than Equal (≥)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-bold text-indigo-600") ≥
+              span Ge
+            button(type="button", @click="insertMathSymbol('\\\\ne ')", title="Insert Not Equal (≠)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-bold text-indigo-600") ≠
+              span Ne
+            button(type="button", @click="insertMathSymbol('\\\\theta ')", title="Insert Theta (θ)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-serif font-bold text-indigo-600") θ
+              span Theta
+            button(type="button", @click="insertMathSymbol('\\\\triangle ')", title="Insert Triangle (△)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-bold text-indigo-600") △
+              span Triangle
+            button(type="button", @click="insertMathSymbol('\\\\angle ')", title="Insert Angle (∠)", class="px-2 py-1 rounded bg-white hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-medium text-xs border border-slate-300 shadow-2xs transition flex items-center gap-1")
+              span(class="font-bold text-indigo-600") ∠
+              span Angle
+
+        // Archetype 1: Multiple Choice Question (MCQ)
+        div(x-show="activeArchetype === 'mcq'", class="space-y-4 pt-1")
+          div
+            label(class="block text-xs font-bold text-slate-700 mb-1") English Question Statement:
+            textarea(
+              id="input-q-english-mcq",
+              rows="2",
+              x-model="newQuestionEnglish",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-english-mcq'",
+              placeholder="e.g. Which of the following numbers is a perfect square?",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+          div
+            label(class="block text-xs font-bold text-slate-700 mb-1") Hindi Question Statement (हिन्दी प्रश्न कथन):
+            textarea(
+              id="input-q-hindi-mcq",
+              rows="2",
+              x-model="newQuestionHindi",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-hindi-mcq'",
+              placeholder="e.g. निम्नलिखित में से कौन सी संख्या एक पूर्ण वर्ग है?",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+          
+          div(class="pt-1")
+            div(class="flex items-center justify-between mb-2")
+              label(class="text-xs font-bold text-slate-700") Options (बहुविकल्पीय विकल्प):
+              div(class="flex items-center gap-2")
+                button(type="button", @click="fillNumericOptions()", class="text-[11px] text-indigo-600 hover:underline font-semibold") Fill 1, 2, 3, 4
+                button(type="button", @click="addMcqOption()", class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs font-bold border border-indigo-200") + Add Option
+            
+            div(class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-200")
+              template(x-for="(opt, oIdx) in newQuestionMcqOptions", :key="oIdx")
+                div(class="flex items-center gap-1.5")
+                  span(class="font-bold text-xs text-slate-600 w-6 uppercase shrink-0", x-text="'(' + ['a','b','c','d','e','f'][oIdx] + ')'")
+                  input(
+                    type="text",
+                    x-model="opt.en",
+                    @input="updateCreateQuestionPreview()",
+                    :placeholder="'Option ' + ['A','B','C','D','E','F'][oIdx] + ' (English)'",
+                    class="w-1/2 text-xs bg-white border border-slate-200 rounded px-2 py-1.5 focus:ring-1 focus:ring-indigo-500 font-mono"
+                  )
+                  input(
+                    type="text",
+                    x-model="opt.hi",
+                    @input="updateCreateQuestionPreview()",
+                    :placeholder="'विकल्प ' + ['A','B','C','D','E','F'][oIdx] + ' (हिन्दी)'",
+                    class="w-1/2 text-xs bg-white border border-slate-200 rounded px-2 py-1.5 focus:ring-1 focus:ring-indigo-500 font-mono"
+                  )
+                  button(
+                    type="button",
+                    x-show="newQuestionMcqOptions.length > 2",
+                    @click="removeMcqOption(oIdx)",
+                    class="text-rose-500 hover:text-rose-700 p-1 text-xs shrink-0"
+                  ) &times;
+
+        // Archetype 2: Fill in the Blanks (FIB)
+        div(x-show="activeArchetype === 'fib'", class="space-y-4 pt-1")
+          div(class="p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800 flex items-start gap-2")
+            span(class="shrink-0") 🛡️
+            span(class="text-[11px] leading-relaxed")
+              strong Automatic Answer Protection:
+              |  Use the 
+              span(class="font-mono bg-blue-100 px-1 rounded") + Insert Blank
+              |  buttons below to position blank spaces. Do NOT put answers in parentheses in the statement.
+          
+          div
+            div(class="flex items-center justify-between mb-1")
+              label(class="text-xs font-bold text-slate-700") English Question Statement with Blank:
+              div(class="flex items-center gap-1")
+                button(type="button", @click="insertSymbolAtCursor('en', '_______')", class="px-2 py-0.5 rounded bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold border border-indigo-200") + Insert Blank (_______)
+                button(type="button", @click="insertSymbolAtCursor('en', '(i) _______ ')", class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono border border-slate-200") + (i)
+                button(type="button", @click="insertSymbolAtCursor('en', '(ii) _______ ')", class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono border border-slate-200") + (ii)
+            textarea(
+              id="input-q-english-fib",
+              rows="2",
+              x-model="newQuestionEnglish",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-english-fib'",
+              placeholder="e.g. The rational number that is equal to its negative is _______.",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+
+          div
+            div(class="flex items-center justify-between mb-1")
+              label(class="text-xs font-bold text-slate-700") Hindi Question Statement with Blank (हिन्दी रिक्त स्थान कथन):
+              div(class="flex items-center gap-1")
+                button(type="button", @click="insertSymbolAtCursor('hi', '_______')", class="px-2 py-0.5 rounded bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold border border-indigo-200") + रिक्त स्थान (_______)
+                button(type="button", @click="insertSymbolAtCursor('hi', '(i) _______ ')", class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono border border-slate-200") + (i)
+                button(type="button", @click="insertSymbolAtCursor('hi', '(ii) _______ ')", class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono border border-slate-200") + (ii)
+            textarea(
+              id="input-q-hindi-fib",
+              rows="2",
+              x-model="newQuestionHindi",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-hindi-fib'",
+              placeholder="e.g. वह परिमेय संख्या जो अपने ऋणात्मक के समान होती है, _______ है।",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+
+        // Archetype 3: True / False (TF)
+        div(x-show="activeArchetype === 'tf'", class="space-y-4 pt-1")
+          div(class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2")
+            label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider") T/F Display Style (सत्य-असत्य प्रारूप):
+            div(class="grid grid-cols-1 sm:grid-cols-3 gap-2")
+              button(
+                type="button",
+                @click="newQuestionTfStyle = 'standard'; updateCreateQuestionPreview()",
+                :class="newQuestionTfStyle === 'standard' ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-700 border border-slate-200'",
+                class="p-2 rounded-lg text-xs transition text-center"
+              ) Standard (True / False)
+              button(
+                type="button",
+                @click="newQuestionTfStyle = 'with_reason'; updateCreateQuestionPreview()",
+                :class="newQuestionTfStyle === 'with_reason' ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-700 border border-slate-200'",
+                class="p-2 rounded-lg text-xs transition text-center"
+              ) With Justification / कारण सहित
+              button(
+                type="button",
+                @click="newQuestionTfStyle = 'box'; updateCreateQuestionPreview()",
+                :class="newQuestionTfStyle === 'box' ? 'bg-indigo-600 text-white font-bold' : 'bg-white text-slate-700 border border-slate-200'",
+                class="p-2 rounded-lg text-xs transition text-center"
+              ) Student Answer Box [ &nbsp; ]
+
+          div
+            label(class="block text-xs font-bold text-slate-700 mb-1") Statement to Evaluate (English):
+            textarea(
+              id="input-q-english-tf",
+              rows="2",
+              x-model="newQuestionEnglish",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-english-tf'",
+              placeholder="e.g. All squares are trapeziums.",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+          div
+            label(class="block text-xs font-bold text-slate-700 mb-1") Statement to Evaluate (हिन्दी कथन):
+            textarea(
+              id="input-q-hindi-tf",
+              rows="2",
+              x-model="newQuestionHindi",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-hindi-tf'",
+              placeholder="e.g. सभी वर्ग समलम्ब चतुर्भुज होते हैं।",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+
+        // Archetype 4: Formula & Definitions / VSA
+        div(x-show="activeArchetype === 'vsa'", class="space-y-4 pt-1")
+          div(class="space-y-1.5")
+            span(class="text-[10px] font-bold text-slate-400 uppercase tracking-wider") 1-Click Prompt Starters (त्वरित सूत्र/परिभाषा प्रारूप):
+            div(class="flex flex-wrap items-center gap-1.5")
+              button(type="button", @click="applyPromptStarter('formula')", class="px-2.5 py-1 rounded bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs font-semibold border border-slate-200") 📐 Formula
+              button(type="button", @click="applyPromptStarter('definition')", class="px-2.5 py-1 rounded bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs font-semibold border border-slate-200") 📖 Definition
+              button(type="button", @click="applyPromptStarter('si_unit')", class="px-2.5 py-1 rounded bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs font-semibold border border-slate-200") ⚡ SI Unit
+              button(type="button", @click="applyPromptStarter('law')", class="px-2.5 py-1 rounded bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs font-semibold border border-slate-200") 🌟 Law / Principle
+              button(type="button", @click="applyPromptStarter('example')", class="px-2.5 py-1 rounded bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs font-semibold border border-slate-200") 🔍 Examples
+
+          div
+            label(class="block text-xs font-bold text-slate-700 mb-1") English Formula / Definition Prompt:
+            textarea(
+              id="input-q-english-vsa",
+              rows="2",
+              x-model="newQuestionEnglish",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-english-vsa'",
+              placeholder="e.g. Write the formula to find the area of a trapezium.",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+          div
+            label(class="block text-xs font-bold text-slate-700 mb-1") Hindi Formula / Definition Prompt (हिन्दी सूत्र/परिभाषा):
+            textarea(
+              id="input-q-hindi-vsa",
+              rows="2",
+              x-model="newQuestionHindi",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-hindi-vsa'",
+              placeholder="e.g. समलम्ब चतुर्भुज का क्षेत्रफल ज्ञात करने का सूत्र लिखिए।",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+
+        // Archetype 5: Short Answer & Step Calculations (SA)
+        div(x-show="activeArchetype === 'sa'", class="space-y-4 pt-1")
+          div(class="space-y-1.5")
+            span(class="text-[10px] font-bold text-slate-400 uppercase tracking-wider") 1-Click Calculation Starters (त्वरित गणना/हल प्रारूप):
+            div(class="flex flex-wrap items-center gap-1.5")
+              button(type="button", @click="applyPromptStarter('solve')", class="px-2.5 py-1 rounded bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs font-semibold border border-slate-200") 🔢 Solve
+              button(type="button", @click="applyPromptStarter('find_value')", class="px-2.5 py-1 rounded bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs font-semibold border border-slate-200") ➕ Find Value
+              button(type="button", @click="applyPromptStarter('diff')", class="px-2.5 py-1 rounded bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs font-semibold border border-slate-200") ⚖️ Differentiate
+              button(type="button", @click="applyPromptStarter('reason')", class="px-2.5 py-1 rounded bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs font-semibold border border-slate-200") ❓ Give Reasons
+              button(type="button", @click="applyPromptStarter('construction')", class="px-2.5 py-1 rounded bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs font-semibold border border-slate-200") 📐 Construction
+
+          div
+            label(class="block text-xs font-bold text-slate-700 mb-1") English Problem & Calculation:
+            textarea(
+              id="input-q-english-sa",
+              rows="2",
+              x-model="newQuestionEnglish",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-english-sa'",
+              placeholder="e.g. Solve the equation: $2x + 7 = 15$ and verify the result.",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+          div
+            label(class="block text-xs font-bold text-slate-700 mb-1") Hindi Problem & Calculation (हिन्दी प्रश्न एवं गणना):
+            textarea(
+              id="input-q-hindi-sa",
+              rows="2",
+              x-model="newQuestionHindi",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-hindi-sa'",
+              placeholder="e.g. समीकरण $2x + 7 = 15$ को हल कीजिए तथा उत्तर की जाँच कीजिए।",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+
+        // Archetype 6: Long Answer & Multi-Part (LA)
+        div(x-show="activeArchetype === 'la'", class="space-y-4 pt-1")
+          div
+            label(class="block text-xs font-bold text-slate-700 mb-1") Main Problem Context / Scenario (English):
+            textarea(
+              id="input-q-english-la",
+              rows="2",
+              x-model="newQuestionEnglish",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-english-la'",
+              placeholder="e.g. A rectangular park has length 45 m and breadth 30 m. A path 2.5 m wide is constructed all around outside the park.",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+          div
+            label(class="block text-xs font-bold text-slate-700 mb-1") Main Problem Context (हिन्दी मुख्य संदर्भ):
+            textarea(
+              id="input-q-hindi-la",
+              rows="2",
+              x-model="newQuestionHindi",
+              @input="updateCreateQuestionPreview()",
+              @focus="lastFocusedInputId = 'input-q-hindi-la'",
+              placeholder="e.g. एक आयताकार पार्क की लंबाई 45 मीटर और चौड़ाई 30 मीटर है। पार्क के चारों ओर बाहर 2.5 मीटर चौड़ा रास्ता बनाया गया है।",
+              class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-1 focus:ring-indigo-500"
+            )
+
+          // Sub-parts builder
+          div(class="pt-1")
+            div(class="flex items-center justify-between mb-2")
+              label(class="text-xs font-bold text-slate-700") Sub-parts / Sub-questions (उप-प्रश्न):
+              button(type="button", @click="addLaPart()", class="px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs font-bold border border-indigo-200") + Add Sub-part (उप-भाग)
+            
+            div(class="space-y-2.5")
+              template(x-for="(lp, pIdx) in newQuestionLaParts", :key="pIdx")
+                div(class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2")
+                  div(class="flex items-center justify-between")
+                    div(class="flex items-center space-x-2")
+                      span(class="font-bold text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md uppercase", x-text="'Part (' + ['a','b','c','d','e'][pIdx] + ')'")
+                      div(class="flex items-center space-x-1")
+                        input(
+                          type="number",
+                          min="0.5",
+                          max="10",
+                          step="0.5",
+                          x-model.number="lp.marks",
+                          @input="recalculateLaMarks(); updateCreateQuestionPreview()",
+                          class="w-16 text-xs bg-white border border-slate-200 rounded px-2 py-1 font-bold text-indigo-700 focus:ring-1 focus:ring-indigo-500"
+                        )
+                        span(class="text-[11px] text-slate-500") Marks
+                    button(
+                      type="button",
+                      x-show="newQuestionLaParts.length > 1",
+                      @click="removeLaPart(pIdx)",
+                      class="text-xs text-rose-600 hover:underline font-semibold"
+                    ) Remove Part
+                  
+                  div(class="grid grid-cols-1 sm:grid-cols-2 gap-2")
+                    input(
+                      type="text",
+                      x-model="lp.en",
+                      @input="updateCreateQuestionPreview()",
+                      placeholder="Sub-part English prompt (e.g. Find the area of the path)...",
+                      class="w-full text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-indigo-500"
+                    )
+                    input(
+                      type="text",
+                      x-model="lp.hi",
+                      @input="updateCreateQuestionPreview()",
+                      placeholder="उप-भाग हिन्दी कथन (जैसे: रास्ते का क्षेत्रफल ज्ञात कीजिए)...",
+                      class="w-full text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-indigo-500"
+                    )
+
+        // Archetype 7: Match the Columns (Match)
+        div(x-show="activeArchetype === 'match'", class="space-y-4 pt-1")
+          div(class="grid grid-cols-1 sm:grid-cols-2 gap-2")
+            div
+              label(class="block text-xs font-bold text-slate-700 mb-1") Match Heading (English):
+              input(
+                type="text",
+                x-model="newQuestionMatchPromptEn",
+                @input="updateCreateQuestionPreview()",
+                placeholder="Match the items in Column I with Column II:",
+                class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 focus:ring-1 focus:ring-indigo-500"
+              )
+            div
+              label(class="block text-xs font-bold text-slate-700 mb-1") Match Heading (हिन्दी शीर्षक):
+              input(
+                type="text",
+                x-model="newQuestionMatchPromptHi",
+                @input="updateCreateQuestionPreview()",
+                placeholder="स्तंभ I के कथनों का स्तंभ II से सही मिलान कीजिए:",
+                class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 focus:ring-1 focus:ring-indigo-500"
+              )
+
+          div(class="pt-1")
+            div(class="flex items-center justify-between mb-2")
+              label(class="text-xs font-bold text-slate-700") Column I vs Column II Pairs (मिलान जोड़े):
+              button(type="button", @click="addMatchPair()", class="px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs font-bold border border-indigo-200") + Add Pair Row
+            
+            div(class="space-y-2")
+              template(x-for="(pair, mIdx) in newQuestionMatchPairs", :key="mIdx")
+                div(class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center gap-2")
+                  span(class="font-mono text-xs font-bold text-slate-600 shrink-0", x-text="['(i)','(ii)','(iii)','(iv)','(v)','(vi)'][mIdx] + ' ↔ ' + ['(A)','(B)','(C)','(D)','(E)','(F)'][mIdx]")
+                  div(class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 flex-1")
+                    div(class="flex gap-1")
+                      input(
+                        type="text",
+                        x-model="pair.col1En",
+                        @input="updateCreateQuestionPreview()",
+                        :placeholder="'Col I #' + (mIdx+1) + ' (En)'",
+                        class="w-1/2 text-xs bg-white border border-slate-200 rounded px-2 py-1.5 focus:ring-1 focus:ring-indigo-500 font-mono"
+                      )
+                      input(
+                        type="text",
+                        x-model="pair.col1Hi",
+                        @input="updateCreateQuestionPreview()",
+                        :placeholder="'Col I #' + (mIdx+1) + ' (Hi)'",
+                        class="w-1/2 text-xs bg-white border border-slate-200 rounded px-2 py-1.5 focus:ring-1 focus:ring-indigo-500 font-mono"
+                      )
+                    div(class="flex gap-1")
+                      input(
+                        type="text",
+                        x-model="pair.col2En",
+                        @input="updateCreateQuestionPreview()",
+                        :placeholder="'Col II #' + (mIdx+1) + ' (En)'",
+                        class="w-1/2 text-xs bg-white border border-slate-200 rounded px-2 py-1.5 focus:ring-1 focus:ring-indigo-500 font-mono"
+                      )
+                      input(
+                        type="text",
+                        x-model="pair.col2Hi",
+                        @input="updateCreateQuestionPreview()",
+                        :placeholder="'Col II #' + (mIdx+1) + ' (Hi)'",
+                        class="w-1/2 text-xs bg-white border border-slate-200 rounded px-2 py-1.5 focus:ring-1 focus:ring-indigo-500 font-mono"
+                      )
+                  button(
+                    type="button",
+                    x-show="newQuestionMatchPairs.length > 2",
+                    @click="removeMatchPair(mIdx)",
+                    class="text-rose-500 hover:text-rose-700 p-1 text-xs shrink-0 self-end sm:self-center"
+                  ) &times;
+
+        // Archetype 8: Raw Markdown & LaTeX
+        div(x-show="activeArchetype === 'raw'", class="space-y-2 pt-1")
+          label(class="block text-xs font-bold text-slate-700") Raw Markdown & KaTeX Content:
+          p(class="text-[11px] text-slate-500") Write full Markdown with bilingual text. Use $...$ for inline math and $$...$$ for display equations.
+          textarea(
+            id="input-q-raw",
+            rows="6",
+            x-model="newQuestionRawContent",
+            @input="updateCreateQuestionPreview()",
+            @focus="lastFocusedInputId = 'input-q-raw'",
+            placeholder="**English question text**  \n**हिन्दी प्रश्न कथन**  \n(a) Option 1 / विकल्प 1  \n(b) Option 2 / विकल्प 2...",
+            class="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-3 focus:ring-1 focus:ring-indigo-500"
+          )
+
+      // Live KaTeX & Markdown Preview Box
+      div(class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2")
+        div(class="flex items-center justify-between")
+          span(class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5")
+            span 👁️ Live Question Preview (हाथों-हाथ पूर्वावलोकन)
+          div(class="flex items-center gap-2")
+            span(class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200", x-text="newQuestionMarks + ' Mark(s)'")
+            span(class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200", x-text="newQuestionChapter || 'No Chapter'")
+        
+        div(
+          id="modal-create-q-preview",
+          class="min-h-[70px] p-4 bg-slate-50/70 rounded-xl border border-dashed border-slate-200 text-slate-800 text-xs sm:text-sm font-serif whitespace-pre-line leading-relaxed"
+        )
+
+      // Options & Save Row
+      div(class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2")
+        label(class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer")
+          input(
+            type="checkbox",
+            x-model="newQuestionAutoSelect",
+            class="rounded text-indigo-600 focus:ring-indigo-500"
+          )
+          span Automatically select and add to active exam paper
+
+        div(class="flex items-center space-x-2 self-end sm:self-auto")
+          button(
+            type="button",
+            @click="closeCreateQuestionModal()",
+            class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
+          ) Cancel
+          button(
+            type="button",
+            @click="saveCustomQuestion()",
+            :disabled="isSavingCustomQuestion",
+            class="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md transition flex items-center gap-2 disabled:opacity-50"
+          )
+            template(x-if="isSavingCustomQuestion")
+              svg(class="animate-spin h-3.5 w-3.5 text-white", fill="none", viewBox="0 0 24 24")
+                circle(class="opacity-25", cx="12", cy="12", r="10", stroke="currentColor", stroke-width="4")
+                path(class="opacity-75", fill="currentColor", d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z")
+            span(x-text="isEditingQuestion ? 'Update Question' : 'Save to Question Bank'")

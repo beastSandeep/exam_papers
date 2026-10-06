@@ -1,0 +1,35 @@
+//- Saved Papers Modal
+div(
+  x-show="savedPapersModalOpen",
+  x-cloak,
+  class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4"
+)
+  div(
+    class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 border border-slate-200 max-h-[85vh] flex flex-col"
+  )
+    div(class="flex items-center justify-between pb-3 border-b border-slate-100")
+      h3(class="text-base font-bold text-slate-800") Saved Paper Configurations
+      button(@click="savedPapersModalOpen = false", class="text-slate-400 hover:text-slate-600")
+        svg(class="w-5 h-5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M6 18L18 6M6 6l12 12")
+    
+    div(class="flex-1 overflow-y-auto py-4 space-y-3")
+      template(x-if="savedPapersList.length === 0")
+        div(class="text-center py-8 text-slate-400 text-sm") No saved configurations yet.
+      
+      template(x-for="item in savedPapersList", :key="item.id")
+        div(class="p-4 rounded-xl border border-slate-200 hover:border-indigo-300 transition flex items-center justify-between bg-slate-50/50")
+          div
+            h4(class="font-bold text-sm text-slate-800", x-text="item.title")
+            div(class="text-xs text-slate-500 mt-1")
+              span(class="font-medium", x-text="getSubjectName(item.subjectId)")
+              span(class="mx-1.5") &bull;
+              span(x-text="item.questionIds.length + ' questions'")
+              span(class="mx-1.5") &bull;
+              span(x-text="new Date(item.createdAt).toLocaleDateString()")
+          
+          div(class="flex items-center space-x-2")
+            button(@click="loadSavedPaper(item)", class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition") Load
+            button(@click="deleteSavedPaper(item.id)", class="p-1.5 text-slate-400 hover:text-rose-600 transition")
+              svg(class="w-4 h-4", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+                path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16")

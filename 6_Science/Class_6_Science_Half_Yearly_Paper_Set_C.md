@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – C)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – C)
 
 **CLASS : VI**  
 **SUBJECT : SCIENCE (विज्ञान)**  
@@ -74,7 +74,7 @@
 **वे पदार्थ जिनसे होकर वस्तुओं को स्पष्ट रूप से देखा जा सकता है, _______ पदार्थ कहलाते हैं।**
 
 **(iii) The liquid metal commonly used in traditional glass bulb thermometers is _______.**  
-**पारंपरिक काँच के बल्ब वाले थर्मामीटर में सामान्यतः उपयोग की जाने वाली द्रव धातु _______ (पारा) है।**
+**पारंपरिक काँच के बल्ब वाले थर्मामीटर में सामान्यतः उपयोग की जाने वाली द्रव धातु _______ है।**
 
 **(iv) The loss of water in the form of vapour from the aerial parts of plants is called _______.**  
 **पौधों के वायवीय भागों से वाष्प के रूप में जल की हानि को _______ कहते हैं।**

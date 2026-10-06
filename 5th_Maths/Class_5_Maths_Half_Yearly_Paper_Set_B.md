@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – B)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – B)
 
 **CLASS : V**  
 **SUBJECT : MATHEMATICS (गणित)**  
@@ -78,7 +78,7 @@
 **(5 × 1 = 5 Marks)**
 
 **Q6. The angle formed between the hands of a clock at $9:00$ o'clock is a _______ angle.**  
-**$9:00$ बजे घड़ी की सुइयों के बीच बना कोण एक _______ (समकोण) होता है।**
+**$9:00$ बजे घड़ी की सुइयों के बीच बना कोण एक _______ होता है।**
 
 **Q7. The formula for the perimeter of a square is: $\text{Perimeter} = 4 \times \underline{\hspace{1.5cm}}$.**  
 **वर्ग के परिमाप का सूत्र है: परिमाप $= 4 \times \underline{\hspace{1.5cm}}$।**

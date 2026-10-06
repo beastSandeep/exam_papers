@@ -46,6 +46,17 @@ CHAPTERS_MAP = {
         "Ch 7: Heat & Transfer of Heat (ऊष्मा एवं स्थानांतरण)",
         "Ch 8: Motion and Time (गति एवं समय)",
         "Ch 9: Nutrition & Respiration in Organisms (पोषण एवं श्वसन)"
+    ],
+    "8_science": [
+        "Ch 1: Crop Production and Management (फसल उत्पादन एवं प्रबंध)",
+        "Ch 2: Microorganisms: Friend and Foe (सूक्ष्मजीव: मित्र एवं शत्रु)",
+        "Ch 3: Coal and Petroleum (कोयला और पेट्रोलियम)",
+        "Ch 4: Combustion and Flame (दहन और ज्वाला)",
+        "Ch 5: Conservation of Plants and Animals (पौधे एवं जंतुओं का संरक्षण)",
+        "Ch 6: Reproduction in Animals (जंतुओं में जनन)",
+        "Ch 7: Reaching the Age of Adolescence (किशोरावस्था की ओर)",
+        "Ch 8: Force and Pressure (बल तथा दाब)",
+        "Ch 9: Friction (घर्षण)"
     ]
 }
 

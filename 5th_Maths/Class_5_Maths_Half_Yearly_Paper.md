@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – A)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – A)
 
 **CLASS : V**  
 **SUBJECT : MATHEMATICS (गणित)**  
@@ -83,8 +83,8 @@
 **Q7. The formula for the perimeter of a rectangle is: $\text{Perimeter} = 2 \times (\text{Length} + \underline{\hspace{1.5cm}})$.**  
 **आयत के परिमाप का सूत्र है: परिमाप $= 2 \times (\text{लंबाई} + \underline{\hspace{1.5cm}})$।**
 
-**Q8. The English letter 'H' looks the same after a _______ ($\frac{1}{2}$ or $\frac{1}{4}$) turn.**  
-**अंग्रेजी वर्णमाला का अक्षर 'H' एक _______ ($\frac{1}{2}$ या $\frac{1}{4}$) घूर्णन के बाद बिल्कुल वैसा ही दिखाई देता है।**
+**Q8. The English letter 'H' looks the same after a _______ turn.**  
+**अंग्रेजी वर्णमाला का अक्षर 'H' एक _______ घूर्णन के बाद बिल्कुल वैसा ही दिखाई देता है।**
 
 **Q9. A cube has _______ square faces and _______ vertices (corners).**  
 **एक घन के _______ वर्गाकार फलक (सतहें) और _______ कोने (शीर्ष) होते हैं।**

@@ -8,7 +8,7 @@
     "maxMarks": 50,
     "isScience": false,
     "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2025 - 26",
+    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_a",
@@ -61,7 +61,7 @@
     "maxMarks": 50,
     "isScience": false,
     "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2025 – 26",
+    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_a",
@@ -114,7 +114,7 @@
     "maxMarks": 50,
     "isScience": true,
     "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2025 – 26",
+    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_1",
@@ -175,7 +175,7 @@
     "maxMarks": 50,
     "isScience": false,
     "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2025 – 26",
+    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_a",
@@ -228,7 +228,7 @@
     "maxMarks": 50,
     "isScience": true,
     "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2025 – 26",
+    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_1",
@@ -279,5 +279,181 @@
         "totalMarks": 10
       }
     ]
+  },
+  "8_science": {
+    "id": "8_science",
+    "name": "Class 8 Science (विज्ञान)",
+    "class": "VIII",
+    "subject": "SCIENCE (विज्ञान)",
+    "time": "2½ HOURS",
+    "maxMarks": 50,
+    "isScience": true,
+    "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
+    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
+    "sections": [
+      {
+        "key": "sec_1",
+        "title": "### SECTION 1 / खंड 1",
+        "subTitle": "Tick (✓) the correct answer in answer sheet / उत्तर पुस्तिका में सही उत्तर पर सही (✓) का निशान लगाएँ",
+        "marksEach": 1,
+        "requiredCount": 5,
+        "totalMarks": 5
+      },
+      {
+        "key": "sec_2",
+        "title": "### SECTION 2 / खंड 2",
+        "subTitle": "Fill in the blanks / रिक्त स्थानों की पूर्ति कीजिए",
+        "marksEach": 1,
+        "requiredCount": 5,
+        "totalMarks": 5
+      },
+      {
+        "key": "sec_3",
+        "title": "### SECTION 3 / खंड 3",
+        "subTitle": "State whether the given statements are True (T) or False (F) / बताएँ कि निम्नलिखित कथन सत्य (T) हैं या असत्य (F)",
+        "marksEach": 1,
+        "requiredCount": 5,
+        "totalMarks": 5
+      },
+      {
+        "key": "sec_4",
+        "title": "### SECTION 4 / खंड 4",
+        "subTitle": "Very Short Answer type questions / अति लघु उत्तरीय प्रश्न",
+        "marksEach": 2,
+        "requiredCount": 5,
+        "totalMarks": 10
+      },
+      {
+        "key": "sec_5",
+        "title": "### SECTION 5 / खंड 5",
+        "subTitle": "Short Answer type questions / लघु उत्तरीय प्रश्न",
+        "marksEach": 3,
+        "requiredCount": 5,
+        "totalMarks": 15
+      },
+      {
+        "key": "sec_6",
+        "title": "### SECTION 6 / खंड 6",
+        "subTitle": "Long Answer type questions / दीर्घ उत्तरीय प्रश्न",
+        "marksEach": 5,
+        "requiredCount": 2,
+        "totalMarks": 10
+      }
+    ]
+  },
+  "8_maths": {
+    "id": "8_maths",
+    "name": "Class 8 Mathematics (गणित)",
+    "class": "VIII",
+    "subject": "MATHEMATICS (गणित)",
+    "time": "2½ HOURS",
+    "maxMarks": 50,
+    "isScience": false,
+    "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
+    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
+    "sections": [
+      {
+        "key": "sec_a",
+        "title": "### SECTION 'A' / खंड 'क'",
+        "subTitle": "Formulas & Definitions / सूत्र एवं परिभाषाएँ",
+        "marksEach": 1,
+        "requiredCount": 5,
+        "totalMarks": 5
+      },
+      {
+        "key": "sec_b",
+        "title": "### SECTION 'B' / खंड 'ख'",
+        "subTitle": "Multiple Choice & True/False / बहुविकल्पीय एवं सत्य-असत्य प्रश्न",
+        "marksEach": 1,
+        "requiredCount": 5,
+        "totalMarks": 5
+      },
+      {
+        "key": "sec_c",
+        "title": "### SECTION 'C' / खंड 'ग'",
+        "subTitle": "Very Short Answer & Core Concepts / अति लघु उत्तरीय प्रश्न",
+        "marksEach": 2,
+        "requiredCount": 6,
+        "totalMarks": 12
+      },
+      {
+        "key": "sec_d",
+        "title": "### SECTION 'D' / खंड 'घ'",
+        "subTitle": "Short Answer & Step Calculations / लघु उत्तरीय एवं क्रमबद्ध गणनाएँ",
+        "marksEach": 3,
+        "requiredCount": 4,
+        "totalMarks": 12
+      },
+      {
+        "key": "sec_e",
+        "title": "### SECTION 'E' / खंड 'ङ'",
+        "subTitle": "Long Answer, Word Problems & Construction / दीर्घ उत्तरीय, व्यावहारिक समस्याएँ एवं रचना",
+        "marksEach": 4,
+        "requiredCount": 4,
+        "totalMarks": 16
+      }
+    ]
+  },
+  "9_science": {
+    "id": "9_science",
+    "class": "IX",
+    "name": "Class 9 Science (विज्ञान)",
+    "subject": "SCIENCE (विज्ञान)",
+    "maxMarks": 80,
+    "time": "3 HOURS",
+    "pattern": "science",
+    "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
+    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
+    "sections": [
+      {
+        "key": "sec_1",
+        "title": "### SECTION 1 / खंड 1",
+        "subTitle": "Tick (✓) the correct answer / बहुविकल्पीय प्रश्न",
+        "marksEach": 1,
+        "requiredCount": 10,
+        "totalMarks": 10
+      },
+      {
+        "key": "sec_2",
+        "title": "### SECTION 2 / खंड 2",
+        "subTitle": "Fill in the blanks / रिक्त स्थानों की पूर्ति कीजिए",
+        "marksEach": 1,
+        "requiredCount": 5,
+        "totalMarks": 5
+      },
+      {
+        "key": "sec_3",
+        "title": "### SECTION 3 / खंड 3",
+        "subTitle": "True or False / सत्य या असत्य",
+        "marksEach": 1,
+        "requiredCount": 5,
+        "totalMarks": 5
+      },
+      {
+        "key": "sec_4",
+        "title": "### SECTION 4 / खंड 4",
+        "subTitle": "Very Short Answer / अति लघु उत्तरीय",
+        "marksEach": 2,
+        "requiredCount": 10,
+        "totalMarks": 20
+      },
+      {
+        "key": "sec_5",
+        "title": "### SECTION 5 / खंड 5",
+        "subTitle": "Short Answer / लघु उत्तरीय",
+        "marksEach": 3,
+        "requiredCount": 8,
+        "totalMarks": 24
+      },
+      {
+        "key": "sec_6",
+        "title": "### SECTION 6 / खंड 6",
+        "subTitle": "Long Answer / दीर्घ उत्तरीय",
+        "marksEach": 4,
+        "requiredCount": 4,
+        "totalMarks": 16
+      }
+    ],
+    "isScience": true
   }
 }

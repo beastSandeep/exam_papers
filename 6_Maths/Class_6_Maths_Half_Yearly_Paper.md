@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – A)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – A)
 
 **CLASS : VI**  
 **SUBJECT : MATHEMATICS (गणित)**  
@@ -84,13 +84,13 @@
 **दो अभाज्य संख्याओं का म.स.प. (HCF) सदैव _______ होता है।**
 
 **Q8. The additive inverse of $-25$ is _______.**  
-**$-25$ का योज्य प्रतिलोम (additive inverse) _______ है।**
+**$-25$ का योज्य प्रतिलोम _______ है।**
 
 **Q9. A fraction whose numerator is greater than its denominator is called an _______ fraction.**  
 **वह भिन्न जिसका अंश उसके हर से बड़ा होता है, _______ भिन्न कहलाती है।**
 
 **Q10. An algebraic expression consisting of two unlike terms is called a _______.**  
-**दो असमान पदों वाले बीजीय व्यंजक को _______ (द्विपद) कहते हैं।**
+**दो असमान पदों वाले बीजीय व्यंजक को _______ कहते हैं।**
 
 ---
 

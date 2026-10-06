@@ -1,0 +1,68 @@
+//- Class & Subject Selector Hub Component
+div(class="mb-6 space-y-2.5")
+  div(class="flex flex-wrap items-center justify-between gap-2")
+    div(class="flex items-center space-x-2")
+      h2(class="text-xs font-bold uppercase tracking-wider text-slate-500") Classes & Subjects (कक्षा एवं विषय)
+      span(class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700", x-text="subjectsList.length + ' Available'")
+    
+    div(class="flex items-center space-x-2")
+      // Add Subject / Class Button
+      button(
+        type="button",
+        @click="openAddSubjectModal()",
+        class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 transition flex items-center gap-1 shadow-xs"
+      )
+        svg(class="w-3.5 h-3.5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M12 4v16m8-8H4")
+        span + Add Class / Subject
+
+  // Class Filter Pills
+  div(class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none")
+    button(
+      type="button",
+      @click="setClassFilter('all')",
+      :class="selectedClassFilter === 'all' ? 'bg-indigo-600 text-white font-bold shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'",
+      class="px-3 py-1 rounded-lg text-xs transition shrink-0"
+    ) All Classes (सभी कक्षाएँ)
+    template(x-for="cls in getUniqueClasses()", :key="cls")
+      button(
+        type="button",
+        @click="setClassFilter(cls)",
+        :class="selectedClassFilter === cls ? 'bg-indigo-600 text-white font-bold shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'",
+        class="px-3 py-1 rounded-lg text-xs transition shrink-0 flex items-center gap-1.5"
+      )
+        span(x-text="'Class ' + cls")
+        span(
+          :class="selectedClassFilter === cls ? 'bg-indigo-500/40 text-white' : 'bg-slate-100 text-slate-500'",
+          class="text-[10px] px-1.5 py-0.2 rounded-full",
+          x-text="getSubjectCountForClass(cls)"
+        )
+
+  // Filtered Subject Cards Grid
+  div(class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5 sm:gap-3")
+    template(x-for="sub in getFilteredSubjects()", :key="sub.id")
+      button(
+        type="button",
+        @click="changeSubject(sub.id)",
+        :class="selectedSubjectId === sub.id ? 'bg-indigo-600 text-white shadow-md ring-2 ring-indigo-600 ring-offset-2' : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'",
+        class="p-3 rounded-xl text-left transition flex flex-col justify-between relative group shadow-xs hover:shadow-sm"
+      )
+        div(class="flex items-center justify-between w-full mb-1")
+          span(
+            :class="selectedSubjectId === sub.id ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'",
+            class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md",
+            x-text="'CLASS ' + sub.class"
+          )
+          span(
+            :class="selectedSubjectId === sub.id ? 'text-indigo-200' : 'text-slate-400'",
+            class="text-[11px] font-medium",
+            x-text="(sub.sections ? sub.sections.length : (sub.isScience ? 6 : 5)) + ' Secs'"
+          )
+        div(class="font-bold text-sm sm:text-base leading-tight mt-1 line-clamp-1", x-text="sub.name")
+        div(
+          :class="selectedSubjectId === sub.id ? 'text-indigo-100' : 'text-slate-500'",
+          class="text-xs mt-1.5 font-medium flex items-center justify-between pt-1 border-t",
+          :style="selectedSubjectId === sub.id ? 'border-color: rgba(255,255,255,0.2)' : 'border-color: rgba(0,0,0,0.05)'"
+        )
+          span(x-text="sub.maxMarks + ' Marks'")
+          span(class="text-[10px] opacity-80", x-text="sub.time")

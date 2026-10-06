@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – C)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – C)
 
 **CLASS : VII**  
 **SUBJECT : SCIENCE (विज्ञान)**  
@@ -68,19 +68,19 @@
 **(5 × 1 = 5 Marks)**
 
 **(i) The reddish-brown substance deposited on iron when exposed to moist air is chemically known as _______ oxide.**  
-**नम वायु के संपर्क में आने पर लोहे पर जमने वाला लाल-भूरा पदार्थ रासायनिक रूप से _______ ऑक्साइड (जंग) कहलाता है।**
+**नम वायु के संपर्क में आने पर लोहे पर जमने वाला लाल-भूरा पदार्थ रासायनिक रूप से _______ ऑक्साइड कहलाता है।**
 
 **(ii) The transitional stage of physical and mental growth between childhood and adulthood is called _______.**  
-**बाल्यावस्था और प्रौढ़ावस्था के बीच की शारीरिक एवं मानसिक वृद्धि की संक्रमणकालीन अवस्था को _______ (किशोरावस्था) कहते हैं।**
+**बाल्यावस्था और प्रौढ़ावस्था के बीच की शारीरिक एवं मानसिक वृद्धि की संक्रमणकालीन अवस्था को _______ कहते हैं।**
 
 **(iii) Materials that do not allow heat to flow through them easily are called _______ of heat.**  
-**वे पदार्थ जो अपने में से होकर ऊष्मा को आसानी से प्रवाहित नहीं होने देते, ऊष्मा के _______ (कुचालक) कहलाते हैं।**
+**वे पदार्थ जो अपने में से होकर ऊष्मा को आसानी से प्रवाहित नहीं होने देते, ऊष्मा के _______ कहलाते हैं।**
 
 **(iv) The distance covered by a moving object in unit time is called its _______.**  
-**किसी गतिमान वस्तु द्वारा एकांक समय में तय की गई दूरी को उसकी _______ (चाल) कहते हैं।**
+**किसी गतिमान वस्तु द्वारा एकांक समय में तय की गई दूरी को उसकी _______ कहते हैं।**
 
 **(v) In ruminant animals, the first and largest stomach chamber where cellulose is fermented is called the _______.**  
-**जुगाली करने वाले (रोमंथी) पशुओं में आमाशय का पहला और सबसे बड़ा कक्ष जहाँ सेल्यूलोज का किण्वन होता है, _______ (रूमेन) कहलाता है।**
+**जुगाली करने वाले (रोमंथी) पशुओं में आमाशय का पहला और सबसे बड़ा कक्ष जहाँ सेल्यूलोज का किण्वन होता है, _______ कहलाता है।**
 
 ---
 

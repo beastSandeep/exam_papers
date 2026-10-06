@@ -1,0 +1,81 @@
+//- Top Navigation Bar Component
+header(class="no-print bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-30 shadow-md")
+  div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between")
+    div(class="flex items-center space-x-3")
+      div(class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-400 flex items-center justify-center shadow-inner")
+        svg(class="w-6 h-6 text-white", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z")
+      div
+        h1(class="text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-2")
+          span Exam Paper Builder
+          span(class="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30") 3-Set Bank
+        p(class="text-xs text-slate-400 hidden sm:block") New M.V.M. Sr. Sec. School &bull; Bilingual Half-Yearly Generator
+
+    // Actions
+    div(class="flex items-center space-x-2 sm:space-x-3")
+      // Create Custom Question button
+      button(
+        type="button",
+        @click="openCreateQuestionModal()",
+        class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition flex items-center gap-1.5"
+      )
+        svg(class="w-4 h-4", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M12 4v16m8-8H4")
+        span(class="hidden xs:inline") + Create Question
+        span(class="xs:hidden") + New Q
+
+      // Saved papers button
+      button(
+        type="button",
+        @click="openSavedPapers()",
+        class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1.5 border border-slate-700"
+      )
+        svg(class="w-4 h-4", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4")
+        span Saved Papers
+        span(x-show="savedPapersCount > 0", x-text="savedPapersCount", class="ml-1 px-1.5 py-0.2 bg-indigo-500 text-white text-[10px] rounded-full")
+
+      // Quick Presets Dropdown
+      div(class="relative", x-data="{ open: false }")
+        button(
+          type="button",
+          @click="open = !open",
+          class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-indigo-950/70 hover:bg-indigo-900/80 text-indigo-200 border border-indigo-700/50 transition flex items-center gap-1.5"
+        )
+          svg(class="w-4 h-4", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+            path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M13 10V3L4 14h7v7l9-11h-7z")
+          span Auto-Fill Set
+          svg(class="w-3.5 h-3.5 ml-0.5 opacity-70", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+            path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M19 9l-7 7-7-7")
+        div(
+          x-show="open",
+          @click.away="open = false",
+          x-cloak,
+          class="absolute right-0 mt-2 w-48 bg-slate-800 rounded-xl shadow-xl py-1 z-50 border border-slate-700 text-xs"
+        )
+          button(@click="autoFillSet('Set A'); open = false", class="w-full text-left px-4 py-2 hover:bg-slate-700/80 text-slate-200 flex items-center justify-between")
+            span Load Set A (Original)
+            span(class="w-2 h-2 rounded-full bg-emerald-400")
+          button(@click="autoFillSet('Set B'); open = false", class="w-full text-left px-4 py-2 hover:bg-slate-700/80 text-slate-200 flex items-center justify-between")
+            span Load Set B (Variation 2)
+            span(class="w-2 h-2 rounded-full bg-sky-400")
+          button(@click="autoFillSet('Set C'); open = false", class="w-full text-left px-4 py-2 hover:bg-slate-700/80 text-slate-200 flex items-center justify-between")
+            span Load Set C (Variation 3)
+            span(class="w-2 h-2 rounded-full bg-purple-400")
+          button(@click="autoFillSet('Sample Paper'); open = false", class="w-full text-left px-4 py-2 hover:bg-slate-700/80 text-amber-200 flex items-center justify-between")
+            span Load Sample / Drill Set
+            span(class="w-2 h-2 rounded-full bg-amber-400")
+          div(class="border-t border-slate-700 my-1")
+          button(@click="randomizeSelection(); open = false", class="w-full text-left px-4 py-2 hover:bg-slate-700/80 text-amber-300")
+            span 🎲 Mix & Match (Randomize)
+
+      // Preview Paper Modal Trigger
+      button(
+        type="button",
+        @click="openPreview()",
+        class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition flex items-center gap-1.5"
+      )
+        svg(class="w-4 h-4", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M15 12a3 3 0 11-6 0 3 3 0 016 0z")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z")
+        span Preview & Export

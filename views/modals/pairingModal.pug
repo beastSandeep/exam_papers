@@ -1,0 +1,79 @@
+//- OR Choice Pairing Modal
+div(
+  x-show="pairingModalOpen",
+  x-cloak,
+  class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6"
+)
+  div(
+    class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col border border-slate-200 overflow-hidden"
+  )
+    // Modal Header
+    div(class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between")
+      div
+        h3(class="text-base font-bold text-white flex items-center gap-2")
+          span 🔀 Pair Alternative "OR / अथवा" Question
+        p(class="text-xs text-slate-400") Choose an alternate question that students can solve instead of the primary question.
+      button(@click="pairingModalOpen = false", class="text-slate-400 hover:text-white p-1 rounded-lg")
+        svg(class="w-5 h-5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M6 18L18 6M6 6l12 12")
+
+    // Modal Body
+    div(class="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50")
+      // Primary Question Preview Box
+      template(x-if="pairingPrimaryQuestionId")
+        div(class="p-4 bg-amber-50 rounded-xl border border-amber-200")
+          div(class="flex items-center justify-between mb-2")
+            span(class="text-[11px] font-bold uppercase tracking-wider text-amber-900 bg-amber-200/70 px-2 py-0.5 rounded") Primary Question (Chosen in Exam)
+            span(class="text-xs font-semibold text-amber-800", x-text="(getQuestionById(pairingPrimaryQuestionId)?.marks || 0) + ' Marks • ' + (getQuestionById(pairingPrimaryQuestionId)?.chapter || 'General')")
+          div(class="text-slate-800 text-xs sm:text-sm font-serif whitespace-pre-line line-clamp-3", x-text="getQuestionById(pairingPrimaryQuestionId)?.preview")
+          
+          template(x-if="orPairs[pairingPrimaryQuestionId]")
+            div(class="mt-3 pt-3 border-t border-amber-200/80 flex items-center justify-between")
+              div(class="text-xs text-slate-700")
+                span(class="font-bold text-amber-800") Current Alternative: 
+                span(x-text="getQuestionPreview(orPairs[pairingPrimaryQuestionId])")
+              button(
+                @click="removeOrPair(pairingPrimaryQuestionId); pairingModalOpen = false",
+                class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-700 transition"
+              ) Remove Pairing
+
+      // Filter Controls inside Modal
+      div(class="flex flex-wrap items-center justify-between gap-2 pt-2")
+        h4(class="text-xs font-bold uppercase tracking-wider text-slate-500") Select Alternate Question (Same Section/Marks)
+        div(class="flex items-center gap-2")
+          // Chapter Filter
+          select(x-model="pairingChapterFilter", class="text-xs rounded-lg border-slate-300 py-1 pl-2.5 pr-8 focus:ring-amber-500 focus:border-amber-500 bg-white")
+            option(value="all") All Chapters
+            template(x-for="ch in getAvailableChapters()", :key="ch")
+              option(:value="ch", x-text="ch")
+
+      // Candidate Questions List
+      div(class="space-y-3")
+        template(x-if="getOrCandidates().length === 0")
+          div(class="text-center py-8 text-slate-400 text-sm") No eligible alternative questions found in this section.
+        
+        template(x-for="cand in getOrCandidates()", :key="cand.id")
+          div(
+            :class="orPairs[pairingPrimaryQuestionId] === cand.id ? 'border-amber-400 bg-amber-50/50 ring-2 ring-amber-300' : 'border-slate-200 bg-white hover:border-amber-300'",
+            class="p-4 rounded-xl border transition shadow-sm"
+          )
+            div(class="flex items-center justify-between gap-2 mb-2")
+              div(class="flex items-center gap-2 flex-wrap")
+                span(
+                  :class="getSetBadgeClass(cand.set)",
+                  class="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider",
+                  x-text="cand.set"
+                )
+                span(class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200", x-text="cand.marks + ' Mark' + (cand.marks > 1 ? 's' : '')")
+                span(x-show="cand.chapter", class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200/80 truncate max-w-[200px]", x-text="cand.chapter")
+                template(x-if="isQuestionSelected(cand.id)")
+                  span(class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800") (In Selection)
+
+              button(
+                @click="setOrPair(pairingPrimaryQuestionId, cand.id)",
+                :class="orPairs[pairingPrimaryQuestionId] === cand.id ? 'bg-amber-600 text-white hover:bg-amber-700' : 'bg-slate-100 text-slate-700 hover:bg-amber-500 hover:text-white'",
+                class="px-3 py-1.5 rounded-lg text-xs font-semibold transition shrink-0"
+              )
+                span(x-text="orPairs[pairingPrimaryQuestionId] === cand.id ? '✓ Current Choice' : 'Select as OR'")
+
+            div(class="text-slate-800 text-xs sm:text-sm font-serif whitespace-pre-line leading-relaxed", x-html="renderQuestionContent(cand.content)")

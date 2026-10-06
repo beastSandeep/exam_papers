@@ -1,6 +1,6 @@
 # NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR
 
-## HALF YEARLY EXAMINATION: 2025 – 26 (SET – A)
+## HALF YEARLY EXAMINATION: 2026 – 27 (SET – A)
 
 **CLASS : VII**  
 **SUBJECT : SCIENCE (विज्ञान)**  
@@ -80,7 +80,7 @@
 **वाहनों में लगा वह यंत्र जो गति की चाल को दर्शाता है, _______ कहलाता है।**
 
 **(v) The finger-like projections on the inner wall of the small intestine that absorb nutrients are called _______.**  
-**पोषक तत्वों को अवशोषित करने वाली छोटी आंत की भीतरी दीवार पर उंगलीनुमा रचनाओं को _______ (दीर्घरोम) कहते हैं।**
+**पोषक तत्वों को अवशोषित करने वाली छोटी आंत की भीतरी दीवार पर उंगलीनुमा रचनाओं को _______ कहते हैं।**
 
 ---
 
