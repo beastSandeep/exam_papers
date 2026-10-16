@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="50%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="paperGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f8fafc" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.25" flood-color="#0f172a" />
+    </filter>
+  </defs>
+
+  <!-- Outer Rounded Square with Gradient -->
+  <rect width="64" height="64" rx="16" fill="url(#bgGrad)" />
+
+  <!-- Subtle Inner Border -->
+  <rect x="1" y="1" width="62" height="62" rx="15" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5" />
+
+  <!-- Exam Paper Sheet with Folded Corner -->
+  <g filter="url(#shadow)">
+    <path d="M17 14C17 12.3431 18.3431 11 20 11H37L47 21V49C47 50.6569 45.6569 52 44 52H20C18.3431 52 17 50.6569 17 49V14Z" fill="url(#paperGrad)" />
+    <!-- Folded Corner Flap -->
+    <path d="M37 11V18C37 19.6569 38.3431 21 40 21H47L37 11Z" fill="#cbd5e1" />
+  </g>
+
+  <!-- Exam Lines / Text Bars -->
+  <rect x="22" y="22" width="13" height="3" rx="1.5" fill="#6366f1" />
+  <rect x="22" y="28" width="18" height="2.5" rx="1.25" fill="#94a3b8" />
+  <rect x="22" y="33" width="14" height="2.5" rx="1.25" fill="#cbd5e1" />
+
+  <!-- Verification Checkmark / Grade Seal -->
+  <circle cx="36" cy="42" r="8" fill="url(#accentGrad)" />
+  <path d="M33 42L35.2 44.2L39.5 39.8" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Sparkle of Excellence -->
+  <path d="M49 8L50.5 12L54.5 13.5L50.5 15L49 19L47.5 15L43.5 13.5L47.5 12L49 8Z" fill="#fbbf24" opacity="0.95" />
+</svg>

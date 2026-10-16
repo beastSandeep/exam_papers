@@ -25,6 +25,8 @@ function paperApp() {
     savedPapersList: [],
     savedPapersCount: 0,
     toastMessage: '',
+    paperSettingsModalOpen: false,
+    paperOverviewTab: 'checklist', // 'checklist' | 'chosen'
 
     // Paper Saver & Layout Preferences
     printLayoutMode: 'compact', // 'standard' | 'compact' | 'twocolumn'
@@ -79,7 +81,9 @@ function paperApp() {
     isSavingCustomQuestion: false,
     subjectChaptersCache: {},
     customMeta: {
-      schoolName: 'NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR',
+      schoolName: '',
+      examType: 'HALF YEARLY EXAMINATION',
+      sessionYear: '2026 – 27',
       examTitle: 'HALF YEARLY EXAMINATION: 2026 – 27',
       setName: '',
       maxMarks: null,
@@ -137,13 +141,33 @@ function paperApp() {
         if (savedMeta) {
           this.metaBySubject = JSON.parse(savedMeta) || {};
           Object.keys(this.metaBySubject).forEach(k => {
-            if (this.metaBySubject[k] && this.metaBySubject[k].examTitle) {
-              this.metaBySubject[k].examTitle = this.metaBySubject[k].examTitle.replace(/2025\s*[-–]\s*26/g, '2026 – 27');
+            if (this.metaBySubject[k]) {
+              if (this.metaBySubject[k].schoolName === 'NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR') {
+                this.metaBySubject[k].schoolName = '';
+              }
+              if (this.metaBySubject[k].examTitle) {
+                this.metaBySubject[k].examTitle = this.metaBySubject[k].examTitle.replace(/2025\s*[-–]\s*26/g, '2026 – 27');
+              }
+              if (!this.metaBySubject[k].sessionYear) {
+                this.metaBySubject[k].sessionYear = '2026 – 27';
+              }
+              if (!this.metaBySubject[k].examType) {
+                this.metaBySubject[k].examType = 'HALF YEARLY EXAMINATION';
+              }
             }
           });
         }
+        if (this.customMeta.schoolName === 'NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR') {
+          this.customMeta.schoolName = '';
+        }
         if (this.customMeta.examTitle) {
           this.customMeta.examTitle = this.customMeta.examTitle.replace(/2025\s*[-–]\s*26/g, '2026 – 27');
+        }
+        if (!this.customMeta.sessionYear) {
+          this.customMeta.sessionYear = '2026 – 27';
+        }
+        if (!this.customMeta.examType) {
+          this.customMeta.examType = 'HALF YEARLY EXAMINATION';
         }
 
         const savedOrPairs = localStorage.getItem('exam_builder_orpairs');
@@ -656,6 +680,193 @@ function paperApp() {
     },
 
     // ==========================================
+    // Paper Settings & Header Configuration
+    // ==========================================
+    openPaperSettingsModal() {
+      this.paperSettingsModalOpen = true;
+    },
+
+    closePaperSettingsModal() {
+      this.paperSettingsModalOpen = false;
+    },
+
+    setSessionYear(yr) {
+      this.customMeta.sessionYear = yr;
+      this.updateExamTitle();
+      this.persistState();
+    },
+
+    setExamType(type) {
+      this.customMeta.examType = type;
+      this.onExamTypeChange();
+    },
+
+    onExamTypeChange() {
+      this.updateExamTitle();
+      this.persistState();
+    },
+
+    updateExamTitle() {
+      const yr = this.customMeta.sessionYear || '2026 – 27';
+      if (this.customMeta.examType && this.customMeta.examType !== 'CUSTOM') {
+        this.customMeta.examTitle = `${this.customMeta.examType}: ${yr}`;
+      } else if (!this.customMeta.examTitle) {
+        this.customMeta.examTitle = `HALF YEARLY EXAMINATION: ${yr}`;
+      }
+    },
+
+    getFormattedExamTitleWithSet() {
+      let title = (this.customMeta.examTitle || 'HALF YEARLY EXAMINATION: 2026 – 27');
+      const yr = this.customMeta.sessionYear || '2026 – 27';
+      if (this.customMeta.examType && this.customMeta.examType !== 'CUSTOM') {
+        title = `${this.customMeta.examType}: ${yr}`;
+      }
+      if (this.customMeta.setName && typeof this.customMeta.setName === 'string') {
+        const trimmed = this.customMeta.setName.trim();
+        const isDev = /^(mixed set|custom set|sample paper|sample|drill|custom|all|none|undefined)$/i.test(trimmed);
+        if (!isDev && trimmed.length > 0) {
+          title += ` (${trimmed})`;
+        }
+      }
+      return title;
+    },
+
+    syncMaxMarksToCalculated() {
+      const calc = this.calculateTotalMarks();
+      this.customMeta.maxMarks = calc > 0 ? calc : (this.currentBlueprint.maxMarks || 50);
+      this.persistState();
+      this.showToast(`Full marks target synced to ${this.customMeta.maxMarks} M!`);
+    },
+
+    applyExamPreset(presetKey) {
+      const yr = this.customMeta.sessionYear || '2026 – 27';
+      const presets = {
+        unit_test_1: {
+          examType: 'UNIT TEST – 1',
+          time: '1 HOUR',
+          maxMarks: 20,
+          label: 'Unit Test 1 (20M • 1 Hr)'
+        },
+        unit_test_2: {
+          examType: 'UNIT TEST – 2',
+          time: '1 HOUR',
+          maxMarks: 20,
+          label: 'Unit Test 2 (20M • 1 Hr)'
+        },
+        unit_test_3: {
+          examType: 'UNIT TEST – 3',
+          time: '1 HOUR',
+          maxMarks: 25,
+          label: 'Unit Test 3 (25M • 1 Hr)'
+        },
+        half_yearly: {
+          examType: 'HALF YEARLY EXAMINATION',
+          time: '2½ HOURS',
+          maxMarks: 50,
+          label: 'Half-Yearly Examination (50M • 2½ Hr)'
+        },
+        annual: {
+          examType: 'ANNUAL EXAMINATION',
+          time: '3 HOURS',
+          maxMarks: 80,
+          label: 'Annual Examination (80M • 3 Hr)'
+        },
+        pre_board: {
+          examType: 'PRE-BOARD EXAMINATION',
+          time: '3 HOURS',
+          maxMarks: 80,
+          label: 'Pre-Board Examination (80M • 3 Hr)'
+        }
+      };
+
+      const preset = presets[presetKey];
+      if (!preset) return;
+
+      this.customMeta.examType = preset.examType;
+      this.customMeta.examTitle = `${preset.examType}: ${yr}`;
+      this.customMeta.time = preset.time;
+      this.customMeta.maxMarks = preset.maxMarks;
+      this.persistState();
+      this.showToast(`Applied preset: ${preset.label}`);
+    },
+
+    resetPaperSettings() {
+      this.customMeta.schoolName = this.currentBlueprint.schoolName || '';
+      this.customMeta.examType = 'HALF YEARLY EXAMINATION';
+      this.customMeta.sessionYear = '2026 – 27';
+      this.customMeta.examTitle = 'HALF YEARLY EXAMINATION: 2026 – 27';
+      this.customMeta.setName = '';
+      this.customMeta.maxMarks = this.currentBlueprint.maxMarks || 50;
+      this.customMeta.time = this.currentBlueprint.time || '2½ HOURS';
+      this.customMeta.includeInstructions = true;
+      this.persistState();
+      this.showToast('Paper settings reset to blueprint defaults.');
+    },
+
+    // ==========================================
+    // Chosen Questions Helpers
+    // ==========================================
+    getChosenQuestionsGroupedBySection() {
+      const groups = [];
+      const sections = this.currentBlueprint.sections || [];
+      const usedIds = new Set();
+
+      sections.forEach(sec => {
+        const matching = this.selectedQuestionIds
+          .map(id => this.getQuestionById(id))
+          .filter(q => q && q.sectionKey === sec.key);
+        
+        if (matching.length > 0) {
+          matching.forEach(q => usedIds.add(q.id));
+          groups.push({
+            section: sec,
+            questions: matching
+          });
+        }
+      });
+
+      // Catch any questions whose section is not in current blueprint
+      const remaining = this.selectedQuestionIds
+        .map(id => this.getQuestionById(id))
+        .filter(q => q && !usedIds.has(q.id));
+
+      if (remaining.length > 0) {
+        groups.push({
+          section: {
+            key: 'other',
+            title: 'Other Questions',
+            subTitle: 'Custom / Unassigned Section',
+            marksEach: 1
+          },
+          questions: remaining
+        });
+      }
+
+      return groups;
+    },
+
+    setQuestionMarksInline(qId, val) {
+      const num = parseFloat(val);
+      if (!isNaN(num) && num > 0) {
+        this.customMarks[qId] = num;
+      } else {
+        delete this.customMarks[qId];
+      }
+      this.persistState();
+    },
+
+    getQuestionCleanTitle(q) {
+      if (!q) return '';
+      if (q.preview) {
+        return q.preview.replace(/^\*\*(?:Q\d+\.|\([ivx]+\))\s*/, '').trim();
+      }
+      const raw = q.content || '';
+      const firstLine = raw.split('\n')[0] || '';
+      const clean = firstLine.replace(/[*_#`$]/g, '').replace(/^\(?[a-zA-Z0-9ivx]+\)?\.?\s*/, '').trim();
+      return clean || 'Question Statement';
+    },
+
+    // ==========================================
     // Paper Saver Mode & Preview Controls
     // ==========================================
     setPrintLayoutMode(mode) {
@@ -1025,6 +1236,7 @@ function paperApp() {
     },
 
     openEditQuestionModal(q) {
+      if (!q) return;
       this.isEditingQuestion = true;
       this.editingQuestionId = q.id;
       this.newQuestionSubjectId = q.subjectId || this.selectedSubjectId;
@@ -1033,15 +1245,47 @@ function paperApp() {
       this.newQuestionCustomChapter = '';
       this.newQuestionMarks = this.getQuestionMarks(q.id);
       this.newQuestionSet = q.set || 'Custom';
-      this.activeArchetype = 'raw';
-      this.newQuestionRawContent = q.content || '';
-      const lines = (q.content || '').split('\n').map(l => l.trim()).filter(Boolean);
+      
+      const raw = q.content || '';
+      this.newQuestionRawContent = raw;
+
+      // Extract English & Hindi lines cleanly
+      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+      let en = '';
+      let hi = '';
       if (lines.length > 0) {
-        this.newQuestionEnglish = lines[0].replace(/^\*\*|\*\*$/g, '');
-        if (lines.length > 1 && !lines[1].startsWith('(') && !lines[1].startsWith('|')) {
-          this.newQuestionHindi = lines[1].replace(/^\*\*|\*\*$/g, '');
+        en = lines[0].replace(/^\*\*|\*\*$/g, '').replace(/^\(?[a-zA-Z0-9ivx]+\)?\.?\s*/, '').trim();
+        if (lines.length > 1 && !lines[1].startsWith('(') && !lines[1].startsWith('|') && !lines[1].startsWith('[')) {
+          hi = lines[1].replace(/^\*\*|\*\*$/g, '').replace(/^\(?[a-zA-Z0-9ivx]+\)?\.?\s*/, '').trim();
         }
       }
+      this.newQuestionEnglish = en || raw;
+      this.newQuestionHindi = hi;
+
+      // Detect archetype
+      const detected = this.detectArchetype(q.sectionKey, this.newQuestionSubjectId);
+      if (detected === 'mcq') {
+        const optionLines = lines.filter(l => /^\([a-fA-F1-6]\)/.test(l));
+        if (optionLines.length >= 2) {
+          this.newQuestionMcqOptions = optionLines.map(l => {
+            const stripped = l.replace(/^\([a-fA-F1-6]\)\s*/, '').trim();
+            const slashParts = stripped.split(/\s*\/\s*/);
+            return {
+              en: slashParts[0] || '',
+              hi: slashParts[1] || ''
+            };
+          });
+          while (this.newQuestionMcqOptions.length < 4) {
+            this.newQuestionMcqOptions.push({ en: '', hi: '' });
+          }
+          this.activeArchetype = 'mcq';
+        } else {
+          this.activeArchetype = 'raw';
+        }
+      } else {
+        this.activeArchetype = 'raw';
+      }
+
       this.newQuestionAutoSelect = this.isQuestionSelected(q.id);
       this.createQuestionModalOpen = true;
       this.$nextTick(() => {
@@ -1458,8 +1702,11 @@ function paperApp() {
             if (idx !== -1) {
               this.questions[idx] = data.question;
             }
+            if (this.customMarks[this.editingQuestionId] !== undefined) {
+              this.customMarks[this.editingQuestionId] = data.question.marks;
+            }
             this.persistState();
-            this.showToast('Question updated successfully in question bank!');
+            this.showToast('Question updated successfully in paper and question bank!');
           }
         } else {
           res = await fetch('/api/questions', {

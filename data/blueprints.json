@@ -7,8 +7,6 @@
     "time": "2½ HOURS",
     "maxMarks": 50,
     "isScience": false,
-    "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_a",
@@ -60,8 +58,6 @@
     "time": "2½ HOURS",
     "maxMarks": 50,
     "isScience": false,
-    "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_a",
@@ -113,8 +109,6 @@
     "time": "2½ HOURS",
     "maxMarks": 50,
     "isScience": true,
-    "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_1",
@@ -174,8 +168,6 @@
     "time": "2½ HOURS",
     "maxMarks": 50,
     "isScience": false,
-    "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_a",
@@ -227,8 +219,6 @@
     "time": "2½ HOURS",
     "maxMarks": 50,
     "isScience": true,
-    "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_1",
@@ -288,8 +278,6 @@
     "time": "2½ HOURS",
     "maxMarks": 50,
     "isScience": true,
-    "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_1",
@@ -349,8 +337,6 @@
     "time": "2½ HOURS",
     "maxMarks": 50,
     "isScience": false,
-    "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_a",
@@ -402,8 +388,6 @@
     "maxMarks": 80,
     "time": "3 HOURS",
     "pattern": "science",
-    "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
     "sections": [
       {
         "key": "sec_1",

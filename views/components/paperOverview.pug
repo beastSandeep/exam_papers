@@ -27,10 +27,37 @@ div(class="space-y-5")
           x-text="isPaperComplete() ? 'Ready for Print' : 'In Progress'"
         )
 
-    // Section Checklist
-    div(class="mt-4 space-y-2.5")
-      h4(class="text-[11px] font-bold text-slate-600 uppercase tracking-wider") Section Checklist
-      div(class="space-y-2 max-h-[300px] overflow-y-auto pr-1")
+    // Segmented Navigation Tabs: Checklist vs Chosen Questions
+    div(class="mt-3.5 grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold")
+      button(
+        type="button",
+        @click="paperOverviewTab = 'checklist'",
+        :class="paperOverviewTab === 'checklist' ? 'bg-white text-indigo-700 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'",
+        class="py-1.5 px-2 rounded-lg transition flex items-center justify-center gap-1.5"
+      )
+        span 📋
+        span Checklist
+      
+      button(
+        type="button",
+        @click="paperOverviewTab = 'chosen'",
+        :class="paperOverviewTab === 'chosen' ? 'bg-white text-indigo-700 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'",
+        class="py-1.5 px-2 rounded-lg transition flex items-center justify-center gap-1.5"
+      )
+        span 📝
+        span Chosen Qs
+        span(
+          :class="paperOverviewTab === 'chosen' ? 'bg-indigo-100 text-indigo-800' : 'bg-slate-200 text-slate-700'",
+          class="text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-0.5",
+          x-text="selectedQuestionIds.length"
+        )
+
+    // TAB 1: Section Checklist
+    div(x-show="paperOverviewTab === 'checklist'", class="mt-3.5 space-y-2.5")
+      div(class="flex items-center justify-between")
+        h4(class="text-[11px] font-bold text-slate-600 uppercase tracking-wider") Section Checklist
+        span(class="text-[10px] text-slate-400 font-medium") Click section to filter
+      div(class="space-y-2 max-h-[320px] overflow-y-auto pr-1")
         template(x-for="(sec, idx) in currentBlueprint.sections", :key="sec.key")
           div(
             @click="selectSection(sec.key)",
@@ -50,27 +77,172 @@ div(class="space-y-5")
               span(x-text="'Section Total: ' + getSectionTotalMarks(sec.key) + ' Marks'")
               span(class="font-mono text-[10px]", x-text="'Def: ' + sec.marksEach + 'M each'")
 
-  // Custom Paper Settings
+    // TAB 2: Chosen Questions List with Edit Capability
+    div(x-show="paperOverviewTab === 'chosen'", class="mt-3.5 space-y-2.5")
+      div(class="flex items-center justify-between")
+        h4(class="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1")
+          span 📝
+          span Chosen Questions in Paper
+        span(class="text-[10px] text-slate-400 font-medium") Edit or re-mark questions
+
+      // Empty State
+      template(x-if="selectedQuestionIds.length === 0")
+        div(class="p-6 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200 space-y-2")
+          span(class="text-2xl block") 📭
+          p(class="text-xs font-bold text-slate-700") No questions selected yet
+          p(class="text-[11px] text-slate-500") Pick questions from the Question Bank on the left or use Quick Pick.
+          button(
+            type="button",
+            @click="autoFillSet('Set A')",
+            class="text-xs font-bold text-indigo-600 hover:underline pt-1"
+          ) Quick Pick Set A Questions →
+
+      // Populated Chosen Questions (Grouped by Section)
+      template(x-if="selectedQuestionIds.length > 0")
+        div(class="space-y-3 max-h-[350px] overflow-y-auto pr-1")
+          template(x-for="grp in getChosenQuestionsGroupedBySection()", :key="grp.section.key")
+            div(class="space-y-1.5")
+              // Section Sub-header
+              div(class="flex items-center justify-between px-1 text-[11px] font-bold text-slate-600 uppercase tracking-wider bg-slate-100/80 py-1 rounded-md")
+                span(class="truncate", x-text="grp.section.title.replace('### ', '') + ' (' + grp.questions.length + ' Qs)'")
+                span(class="text-indigo-700 font-extrabold shrink-0", x-text="getSectionTotalMarks(grp.section.key) + ' M'")
+              
+              // Individual Chosen Questions
+              div(class="space-y-2")
+                template(x-for="(q, qIdx) in grp.questions", :key="q.id")
+                  div(class="bg-slate-50/90 hover:bg-slate-100 rounded-xl p-2.5 border border-slate-200/90 transition space-y-1.5")
+                    // Card Header: Question index, chapter, OR tag, inline marks
+                    div(class="flex items-center justify-between gap-1.5")
+                      div(class="flex items-center gap-1.5 truncate")
+                        span(class="font-black text-xs text-slate-800 shrink-0", x-text="'Q' + (qIdx + 1)")
+                        span(class="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 truncate max-w-[130px]", x-text="q.chapter || 'Ch'")
+                        template(x-if="isQuestionPairedAsPrimary(q.id)")
+                          span(class="text-[9px] font-bold px-1 py-0.2 rounded bg-amber-100 text-amber-800 border border-amber-300 shrink-0") 🔀 OR Pair
+                      
+                      // Inline Marks Editor
+                      div(class="flex items-center gap-1 shrink-0")
+                        input(
+                          type="number",
+                          min="0.5",
+                          max="20",
+                          step="0.5",
+                          :value="getQuestionMarks(q.id)",
+                          @input="setQuestionMarksInline(q.id, $event.target.value)",
+                          title="Click to edit marks for this question",
+                          class="w-12 text-center text-[11px] font-black text-indigo-700 bg-white border border-slate-300 rounded py-0.5 px-1 focus:ring-1 focus:ring-indigo-500 shadow-2xs"
+                        )
+                        span(class="text-[10px] font-bold text-slate-400") M
+
+                    // Bilingual Preview snippet
+                    p(class="text-xs text-slate-700 line-clamp-2 leading-snug font-medium", x-text="getQuestionCleanTitle(q)")
+
+                    // Action Buttons Bar
+                    div(class="flex items-center justify-between pt-1 border-t border-slate-200/60")
+                      button(
+                        type="button",
+                        @click="openEditQuestionModal(q)",
+                        title="Edit question text, Hindi/English translation, options or marks",
+                        class="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 px-2 py-0.5 rounded transition flex items-center gap-1"
+                      )
+                        span ✎ Edit Question
+                      
+                      div(class="flex items-center gap-1")
+                        button(
+                          type="button",
+                          @click="openPairingModal(q.id)",
+                          title="Pair this question with an alternative OR question",
+                          class="text-[10px] font-semibold text-slate-600 hover:text-indigo-600 hover:bg-slate-200/60 px-1.5 py-0.5 rounded transition"
+                        ) 🔀 Pair OR
+                        
+                        button(
+                          type="button",
+                          @click="toggleQuestion(q.id)",
+                          title="Remove this question from paper",
+                          class="text-[10px] font-semibold text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-1.5 py-0.5 rounded transition"
+                        ) ✕ Remove
+
+  // Custom Paper Settings (Quick Access & Studio Link)
   div(class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200 space-y-3.5")
-    h3(class="font-bold text-slate-800 text-xs sm:text-sm uppercase tracking-wider flex items-center gap-1.5 pb-2 border-b border-slate-100")
-      svg(class="w-4 h-4 text-slate-600", fill="none", stroke="currentColor", viewBox="0 0 24 24")
-        path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z")
-        path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M15 12a3 3 0 11-6 0 3 3 0 016 0z")
-      span Paper Settings (पेपर विवरण)
+    div(class="flex items-center justify-between pb-2 border-b border-slate-100")
+      h3(class="font-bold text-slate-800 text-xs sm:text-sm uppercase tracking-wider flex items-center gap-1.5")
+        svg(class="w-4 h-4 text-slate-600", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M15 12a3 3 0 11-6 0 3 3 0 016 0z")
+        span Paper Settings (पेपर विवरण)
+      
+      button(
+        type="button",
+        @click="openPaperSettingsModal()",
+        class="text-[11px] text-indigo-600 hover:text-indigo-800 hover:underline font-bold flex items-center gap-1"
+      )
+        span ⚙️ Full Studio
 
     div(class="space-y-2.5")
-      div(class="grid grid-cols-2 gap-2")
-        div
-          label(class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1") Set Code:
+      // School Name
+      div
+        label(class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1") School Name (विद्यालय का नाम):
+        input(
+          type="text",
+          x-model="customMeta.schoolName",
+          @input="persistState()",
+          placeholder="Enter School / College Name (e.g. Cambridge School)...",
+          class="w-full text-xs font-semibold rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50/50"
+        )
+
+      // Exam Type Selector
+      div
+        label(class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1") Exam Type (परीक्षा प्रकार):
+        select(
+          x-model="customMeta.examType",
+          @change="onExamTypeChange()",
+          class="w-full text-xs font-semibold rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50/50"
+        )
+          option(value="HALF YEARLY EXAMINATION") Half Yearly Examination (अर्धवार्षिक परीक्षा)
+          option(value="ANNUAL EXAMINATION") Annual Examination (वार्षिक परीक्षा)
+          option(value="UNIT TEST – 1") Unit Test 1 (इकाई परीक्षा 1)
+          option(value="UNIT TEST – 2") Unit Test 2 (इकाई परीक्षा 2)
+          option(value="UNIT TEST – 3") Unit Test 3 (इकाई परीक्षा 3)
+          option(value="PERIODIC TEST – 1") Periodic Test 1 (आवधिक परीक्षा 1)
+          option(value="PERIODIC TEST – 2") Periodic Test 2 (आवधिक परीक्षा 2)
+          option(value="PERIODIC TEST – 3") Periodic Test 3 (आवधिक परीक्षा 3)
+          option(value="PRE-BOARD EXAMINATION") Pre-Board Examination (प्री-बोर्ड परीक्षा)
+          option(value="CUSTOM") ➕ Custom Exam Title...
+        
+        div(x-show="customMeta.examType === 'CUSTOM'", class="pt-1.5")
           input(
             type="text",
-            x-model="customMeta.setName",
+            x-model="customMeta.examTitle",
             @input="persistState()",
-            placeholder="e.g. SET - A",
-            class="w-full text-xs rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+            placeholder="e.g. FIRST TERM EXAM: 2026 – 27",
+            class="w-full text-xs font-semibold rounded-lg border-indigo-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
           )
+
+      // Session Year Quick Switcher
+      div
+        div(class="flex items-center justify-between mb-1")
+          label(class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider") Session Year (सत्र):
+          span(class="text-[10px] text-emerald-600 font-bold") 2026 – 27
+        div(class="grid grid-cols-3 gap-1")
+          template(x-for="yr in ['2026 – 27', '2025 – 26', '2027 – 28']", :key="yr")
+            button(
+              type="button",
+              @click="setSessionYear(yr)",
+              :class="customMeta.sessionYear === yr ? 'bg-indigo-600 text-white font-bold shadow-xs' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'",
+              class="py-1 text-xs rounded-lg transition"
+              x-text="yr"
+            )
+
+      // Target Marks & Set Code
+      div(class="grid grid-cols-2 gap-2 pt-0.5")
         div
-          label(class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1") Max Marks:
+          div(class="flex items-center justify-between mb-1")
+            label(class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider") Max Marks:
+            button(
+              type="button",
+              @click="syncMaxMarksToCalculated()",
+              title="Match max marks to selected questions total",
+              class="text-[9px] text-indigo-600 hover:underline font-bold"
+            ) 🎯 Sync
           input(
             type="number",
             min="1",
@@ -78,17 +250,30 @@ div(class="space-y-5")
             x-model.number="customMeta.maxMarks",
             @input="persistState()",
             :placeholder="currentBlueprint.maxMarks || 50",
-            class="w-full text-xs rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+            class="w-full text-xs font-bold text-indigo-700 rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50/50"
           )
+        div
+          label(class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1") Set Code:
+          input(
+            type="text",
+            x-model="customMeta.setName",
+            @input="persistState()",
+            placeholder="e.g. SET – A",
+            class="w-full text-xs font-semibold rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50/50"
+          )
+
+      // Time Allowed
       div
-        label(class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1") School Name:
+        label(class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1") Time Duration (समय सीमा):
         input(
           type="text",
-          x-model="customMeta.schoolName",
+          x-model="customMeta.time",
           @input="persistState()",
-          class="w-full text-xs rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+          placeholder="e.g. 2½ HOURS or 1 HOUR",
+          class="w-full text-xs font-semibold rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50/50"
         )
       
+      // General Instructions Toggle
       div(class="pt-1")
         label(class="flex items-center justify-between cursor-pointer")
           span(class="text-xs font-semibold text-slate-700") Include General Instructions
@@ -100,6 +285,15 @@ div(class="space-y-5")
               class="sr-only peer"
             )
             div(class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600")
+
+      // Button to open Full Modal with Presets & Live Header Preview
+      button(
+        type="button",
+        @click="openPaperSettingsModal()",
+        class="w-full mt-2 py-2 px-3 rounded-xl font-bold text-xs bg-slate-900 hover:bg-slate-800 text-white shadow-xs transition flex items-center justify-center gap-1.5"
+      )
+        span ⚡
+        span Header Studio & 1-Click Presets (UT, Annual...)
 
   // Paper Actions
   div(class="space-y-2 pt-1")

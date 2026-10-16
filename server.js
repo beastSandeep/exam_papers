@@ -107,8 +107,6 @@ app.post('/api/subjects', (req, res) => {
     time: time || "2½ HOURS",
     maxMarks: Number(maxMarks) || 50,
     isScience: Boolean(isScience || pattern === 'science'),
-    schoolName: "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
-    examTitle: "HALF YEARLY EXAMINATION: 2026 – 27",
     sections: defaultSections
   };
 
@@ -176,16 +174,28 @@ app.put('/api/questions/:subjectId/:id', (req, res) => {
   const { subjectId, id } = req.params;
   const { sectionKey, chapter, marks, content, preview, set } = req.body;
   const all = JSON.parse(fs.readFileSync(QUESTIONS_PATH, 'utf-8'));
-  if (!all[subjectId]) {
-    return res.status(404).json({ error: 'Subject not found' });
+
+  let targetSubjectId = subjectId;
+  let idx = -1;
+  if (all[targetSubjectId]) {
+    idx = all[targetSubjectId].findIndex(q => q.id === id);
+  }
+  if (idx === -1) {
+    for (const sid of Object.keys(all)) {
+      const foundIdx = all[sid].findIndex(q => q.id === id);
+      if (foundIdx !== -1) {
+        targetSubjectId = sid;
+        idx = foundIdx;
+        break;
+      }
+    }
   }
 
-  const idx = all[subjectId].findIndex(q => q.id === id);
   if (idx === -1) {
     return res.status(404).json({ error: 'Question not found' });
   }
 
-  const existing = all[subjectId][idx];
+  const existing = all[targetSubjectId][idx];
   if (sectionKey) existing.sectionKey = sectionKey;
   if (chapter) existing.chapter = chapter;
   if (marks !== undefined) existing.marks = Number(marks) || existing.marks;
@@ -201,13 +211,29 @@ app.put('/api/questions/:subjectId/:id', (req, res) => {
 app.delete('/api/questions/:subjectId/:id', (req, res) => {
   const { subjectId, id } = req.params;
   const all = JSON.parse(fs.readFileSync(QUESTIONS_PATH, 'utf-8'));
-  if (!all[subjectId]) {
-    return res.status(404).json({ error: 'Subject not found' });
+
+  let targetSubjectId = subjectId;
+  let found = false;
+  if (all[targetSubjectId]) {
+    const initLen = all[targetSubjectId].length;
+    all[targetSubjectId] = all[targetSubjectId].filter(q => q.id !== id);
+    if (all[targetSubjectId].length < initLen) {
+      found = true;
+    }
   }
 
-  const initialLen = all[subjectId].length;
-  all[subjectId] = all[subjectId].filter(q => q.id !== id);
-  if (all[subjectId].length === initialLen) {
+  if (!found) {
+    for (const sid of Object.keys(all)) {
+      const initLen = all[sid].length;
+      all[sid] = all[sid].filter(q => q.id !== id);
+      if (all[sid].length < initLen) {
+        found = true;
+        break;
+      }
+    }
+  }
+
+  if (!found) {
     return res.status(404).json({ error: 'Question not found' });
   }
 

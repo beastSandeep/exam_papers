@@ -1,0 +1,306 @@
+//- Exam Paper Settings & Header Configuration Modal
+div(
+  x-show="paperSettingsModalOpen",
+  x-cloak,
+  class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6"
+)
+  div(
+    class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col border border-slate-200 overflow-hidden"
+  )
+    // Modal Header
+    div(class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0 border-b border-slate-800")
+      div
+        h3(class="text-base font-bold text-white flex items-center gap-2")
+          span ⚙️ Paper Settings & Header Studio
+          span(class="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-indigo-500/30 text-indigo-300 border border-indigo-400/30") 2026 – 27
+        p(class="text-xs text-slate-400 mt-0.5") Customize school name, exam type, session year, target marks, and preview header in real-time.
+      button(@click="closePaperSettingsModal()", class="text-slate-400 hover:text-white p-1 rounded-lg transition")
+        svg(class="w-5 h-5", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M6 18L18 6M6 6l12 12")
+
+    // Modal Scrollable Body
+    div(class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-5 bg-slate-50")
+
+      // 1-Click Fast Exam Presets
+      div(class="bg-gradient-to-r from-indigo-50 to-emerald-50 p-3.5 sm:p-4 rounded-xl border border-indigo-100 space-y-2")
+        div(class="flex items-center justify-between")
+          span(class="text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center gap-1.5")
+            span ⚡
+            span 1-Click Exam Presets (त्वरित परीक्षा प्रारूप):
+          span(class="text-[10px] text-indigo-600 font-medium") Automatically sets title, time & marks
+        
+        div(class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1.5")
+          button(
+            type="button",
+            @click="applyExamPreset('unit_test_1')",
+            :class="customMeta.examType === 'UNIT TEST – 1' ? 'bg-indigo-600 text-white shadow-xs font-bold' : 'bg-white hover:bg-indigo-50 text-slate-700 border border-slate-200'",
+            class="p-2 rounded-lg text-xs transition flex flex-col items-center justify-center text-center"
+          )
+            span(class="font-bold") Unit Test 1
+            span(class="text-[10px] opacity-80") 20 M • 1 Hr
+          
+          button(
+            type="button",
+            @click="applyExamPreset('unit_test_2')",
+            :class="customMeta.examType === 'UNIT TEST – 2' ? 'bg-indigo-600 text-white shadow-xs font-bold' : 'bg-white hover:bg-indigo-50 text-slate-700 border border-slate-200'",
+            class="p-2 rounded-lg text-xs transition flex flex-col items-center justify-center text-center"
+          )
+            span(class="font-bold") Unit Test 2
+            span(class="text-[10px] opacity-80") 20 M • 1 Hr
+
+          button(
+            type="button",
+            @click="applyExamPreset('unit_test_3')",
+            :class="customMeta.examType === 'UNIT TEST – 3' ? 'bg-indigo-600 text-white shadow-xs font-bold' : 'bg-white hover:bg-indigo-50 text-slate-700 border border-slate-200'",
+            class="p-2 rounded-lg text-xs transition flex flex-col items-center justify-center text-center"
+          )
+            span(class="font-bold") Unit Test 3
+            span(class="text-[10px] opacity-80") 25 M • 1 Hr
+
+          button(
+            type="button",
+            @click="applyExamPreset('half_yearly')",
+            :class="customMeta.examType === 'HALF YEARLY EXAMINATION' ? 'bg-emerald-600 text-white shadow-xs font-bold' : 'bg-white hover:bg-emerald-50 text-slate-700 border border-slate-200'",
+            class="p-2 rounded-lg text-xs transition flex flex-col items-center justify-center text-center"
+          )
+            span(class="font-bold") Half-Yearly
+            span(class="text-[10px] opacity-80") 50 M • 2½ Hr
+
+          button(
+            type="button",
+            @click="applyExamPreset('annual')",
+            :class="customMeta.examType === 'ANNUAL EXAMINATION' ? 'bg-purple-600 text-white shadow-xs font-bold' : 'bg-white hover:bg-purple-50 text-slate-700 border border-slate-200'",
+            class="p-2 rounded-lg text-xs transition flex flex-col items-center justify-center text-center"
+          )
+            span(class="font-bold") Annual Exam
+            span(class="text-[10px] opacity-80") 80 M • 3 Hr
+
+          button(
+            type="button",
+            @click="applyExamPreset('pre_board')",
+            :class="customMeta.examType === 'PRE-BOARD EXAMINATION' ? 'bg-amber-600 text-white shadow-xs font-bold' : 'bg-white hover:bg-amber-50 text-slate-700 border border-slate-200'",
+            class="p-2 rounded-lg text-xs transition flex flex-col items-center justify-center text-center"
+          )
+            span(class="font-bold") Pre-Board
+            span(class="text-[10px] opacity-80") 80 M • 3 Hr
+
+      // Row 1: School Name
+      div(class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-1.5")
+        div(class="flex items-center justify-between")
+          label(class="text-xs font-bold text-slate-700 uppercase tracking-wider") School Name (विद्यालय का नाम):
+          button(
+            type="button",
+            @click="customMeta.schoolName = ''; persistState()",
+            class="text-[11px] text-slate-500 hover:text-rose-600 hover:underline font-semibold"
+          ) Clear Name
+        input(
+          type="text",
+          x-model="customMeta.schoolName",
+          @input="persistState()",
+          placeholder="Enter School / Institution Name (e.g. Delhi Public School)...",
+          class="w-full text-xs font-semibold bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 focus:ring-1 focus:ring-indigo-500"
+        )
+        p(class="text-[11px] text-slate-400") This appears as the main top header on your printed and exported examination paper.
+
+      // Row 2: Exam Type & Academic Session Year
+      div(class="grid grid-cols-1 sm:grid-cols-2 gap-4")
+        
+        // Exam Type
+        div(class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2")
+          label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider") Exam Type (परीक्षा प्रकार):
+          select(
+            x-model="customMeta.examType",
+            @change="onExamTypeChange()",
+            class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 focus:ring-1 focus:ring-indigo-500"
+          )
+            option(value="HALF YEARLY EXAMINATION") Half Yearly Examination (अर्धवार्षिक परीक्षा)
+            option(value="ANNUAL EXAMINATION") Annual Examination (वार्षिक परीक्षा)
+            option(value="UNIT TEST – 1") Unit Test 1 (इकाई परीक्षा 1)
+            option(value="UNIT TEST – 2") Unit Test 2 (इकाई परीक्षा 2)
+            option(value="UNIT TEST – 3") Unit Test 3 (इकाई परीक्षा 3)
+            option(value="PERIODIC TEST – 1") Periodic Test 1 (आवधिक परीक्षा 1)
+            option(value="PERIODIC TEST – 2") Periodic Test 2 (आवधिक परीक्षा 2)
+            option(value="PERIODIC TEST – 3") Periodic Test 3 (आवधिक परीक्षा 3)
+            option(value="PRE-BOARD EXAMINATION") Pre-Board Examination (प्री-बोर्ड परीक्षा)
+            option(value="CUSTOM") ➕ Custom Exam Title...
+          
+          div(x-show="customMeta.examType === 'CUSTOM'")
+            input(
+              type="text",
+              x-model="customMeta.examTitle",
+              @input="persistState()",
+              placeholder="Enter custom title (e.g. FIRST TERM EXAM: 2026 – 27)...",
+              class="w-full text-xs bg-slate-50 border border-indigo-200 rounded-lg p-2 font-medium text-slate-800 focus:ring-1 focus:ring-indigo-500 mt-1"
+            )
+
+        // Session Year
+        div(class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2")
+          div(class="flex items-center justify-between")
+            label(class="text-xs font-bold text-slate-700 uppercase tracking-wider") Session Year (सत्र):
+            span(class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200") Active: 2026 – 27
+          
+          div(class="flex items-center gap-1.5")
+            template(x-for="yr in ['2026 – 27', '2025 – 26', '2027 – 28']", :key="yr")
+              button(
+                type="button",
+                @click="setSessionYear(yr)",
+                :class="customMeta.sessionYear === yr ? 'bg-indigo-600 text-white font-bold shadow-xs' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'",
+                class="flex-1 py-2 text-xs rounded-lg transition"
+                x-text="yr"
+              )
+          
+          div(class="pt-1")
+            input(
+              type="text",
+              x-model="customMeta.sessionYear",
+              @input="updateExamTitle(); persistState()",
+              placeholder="Or enter custom session (e.g. 2026 – 2027)...",
+              class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 font-mono text-slate-800 focus:ring-1 focus:ring-indigo-500"
+            )
+
+      // Row 3: Target Full Marks & Time Allowed
+      div(class="grid grid-cols-1 sm:grid-cols-2 gap-4")
+
+        // Full Marks Target
+        div(class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2")
+          div(class="flex items-center justify-between")
+            label(class="text-xs font-bold text-slate-700 uppercase tracking-wider") Full Marks Target (पूर्णांक):
+            button(
+              type="button",
+              @click="syncMaxMarksToCalculated()",
+              title="Automatically match target marks to sum of selected questions",
+              class="text-[10px] text-indigo-600 hover:text-indigo-800 font-bold underline flex items-center gap-1"
+            )
+              span 🎯 Sync with Picked Qs (
+              span(x-text="calculateTotalMarks() + ' M'")
+              span )
+
+          div(class="flex items-center gap-2")
+            input(
+              type="number",
+              min="1",
+              max="200",
+              x-model.number="customMeta.maxMarks",
+              @input="persistState()",
+              :placeholder="currentBlueprint.maxMarks || 50",
+              class="w-full text-xs font-black text-indigo-700 bg-slate-50 border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-indigo-500"
+            )
+            span(class="text-xs text-slate-500 font-bold shrink-0") Marks
+
+          div(class="flex items-center gap-1 pt-1")
+            template(x-for="m in [20, 25, 40, 50, 80, 100]", :key="m")
+              button(
+                type="button",
+                @click="customMeta.maxMarks = m; persistState()",
+                :class="customMeta.maxMarks === m ? 'bg-indigo-600 text-white font-bold' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'",
+                class="flex-1 py-1 text-[11px] rounded transition font-medium"
+                x-text="m + 'M'"
+              )
+
+        // Time Allowed
+        div(class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2")
+          label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider") Time Duration (समय सीमा):
+          input(
+            type="text",
+            x-model="customMeta.time",
+            @input="persistState()",
+            placeholder="e.g. 2½ HOURS or 1 HOUR",
+            class="w-full text-xs font-semibold bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800 focus:ring-1 focus:ring-indigo-500"
+          )
+          div(class="flex flex-wrap items-center gap-1 pt-1")
+            template(x-for="t in ['45 MIN', '1 HOUR', '1½ HOURS', '2 HOURS', '2½ HOURS', '3 HOURS']", :key="t")
+              button(
+                type="button",
+                @click="customMeta.time = t; persistState()",
+                :class="customMeta.time === t ? 'bg-indigo-600 text-white font-bold' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'",
+                class="px-2 py-1 text-[10px] rounded transition font-medium"
+                x-text="t"
+              )
+
+      // Row 4: Set Code & General Instructions Toggle
+      div(class="grid grid-cols-1 sm:grid-cols-2 gap-4")
+        
+        // Set Code
+        div(class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2")
+          label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider") Set Code (प्रश्न पत्र सेट):
+          input(
+            type="text",
+            x-model="customMeta.setName",
+            @input="persistState()",
+            placeholder="e.g. SET – A, SET – B, or leave empty",
+            class="w-full text-xs font-bold bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-800 focus:ring-1 focus:ring-indigo-500"
+          )
+          div(class="flex items-center gap-1.5 pt-1")
+            button(type="button", @click="customMeta.setName = 'SET – A'; persistState()", class="flex-1 py-1 text-xs rounded bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 font-semibold border border-slate-200") SET – A
+            button(type="button", @click="customMeta.setName = 'SET – B'; persistState()", class="flex-1 py-1 text-xs rounded bg-slate-100 hover:bg-sky-50 text-slate-700 hover:text-sky-700 font-semibold border border-slate-200") SET – B
+            button(type="button", @click="customMeta.setName = 'SET – C'; persistState()", class="flex-1 py-1 text-xs rounded bg-slate-100 hover:bg-purple-50 text-slate-700 hover:text-purple-700 font-semibold border border-slate-200") SET – C
+            button(type="button", @click="customMeta.setName = ''; persistState()", class="py-1 px-2 text-xs rounded bg-slate-100 hover:bg-rose-50 text-rose-600 font-semibold border border-slate-200") None
+
+        // Instructions
+        div(class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between")
+          div
+            label(class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1") General Instructions:
+            p(class="text-[11px] text-slate-500 leading-tight") Print bilingual student instructions (all questions compulsory, marks indicated, etc.)
+          
+          div(class="pt-3")
+            label(class="flex items-center justify-between cursor-pointer p-2 rounded-lg bg-slate-50 border border-slate-200")
+              span(class="text-xs font-semibold text-slate-800", x-text="customMeta.includeInstructions ? 'Instructions are ENABLED' : 'Instructions are DISABLED'")
+              div(class="relative inline-flex items-center")
+                input(
+                  type="checkbox",
+                  x-model="customMeta.includeInstructions",
+                  @change="persistState()",
+                  class="sr-only peer"
+                )
+                div(class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600")
+
+      // Real-time Visual Exam Header Preview Box
+      div(class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm space-y-2.5")
+        div(class="flex items-center justify-between")
+          span(class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5")
+            span 👁️
+            span Live Exam Paper Header Preview (हाथों-हाथ पूर्वावलोकन):
+          span(class="text-[10px] text-slate-400 font-medium") Exactly as it will print on the exam paper
+        
+        div(class="p-4 sm:p-5 bg-slate-50 rounded-xl border border-dashed border-slate-300 text-center font-serif space-y-2")
+          h4(
+            class="text-base sm:text-lg font-black tracking-wide uppercase",
+            :class="customMeta.schoolName ? 'text-slate-900' : 'text-slate-400 italic'",
+            x-text="customMeta.schoolName || currentBlueprint.schoolName || 'YOUR SCHOOL / INSTITUTION NAME'"
+          )
+          h5(class="text-xs sm:text-sm font-bold text-slate-800 tracking-wider uppercase", x-text="getFormattedExamTitleWithSet()")
+          
+          div(class="pt-2 border-t border-slate-200 mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-bold text-slate-700 font-sans text-left bg-white p-2.5 rounded-lg border border-slate-200 shadow-2xs")
+            div
+              span(class="text-[10px] text-slate-400 block font-semibold") CLASS:
+              span(x-text="currentBlueprint.class || 'VIII'")
+            div
+              span(class="text-[10px] text-slate-400 block font-semibold") SUBJECT:
+              span(class="truncate block", x-text="currentBlueprint.subject || 'SCIENCE'")
+            div
+              span(class="text-[10px] text-slate-400 block font-semibold") TIME:
+              span(x-text="customMeta.time || currentBlueprint.time || '2½ HOURS'")
+            div
+              span(class="text-[10px] text-slate-400 block font-semibold") MAX MARKS:
+              span(class="text-indigo-700 font-extrabold", x-text="(customMeta.maxMarks !== null && customMeta.maxMarks !== '') ? customMeta.maxMarks : (calculateTotalMarks() || currentBlueprint.maxMarks || 50)")
+
+    // Modal Footer
+    div(class="px-6 py-3.5 bg-slate-100 flex items-center justify-between border-t border-slate-200 shrink-0")
+      button(
+        type="button",
+        @click="resetPaperSettings()",
+        class="text-xs text-rose-600 hover:text-rose-800 hover:underline font-semibold"
+      ) Reset to Blueprint Defaults
+      
+      div(class="flex items-center space-x-2")
+        button(
+          type="button",
+          @click="closePaperSettingsModal()",
+          class="px-4 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition shadow-2xs"
+        ) Close
+        button(
+          type="button",
+          @click="closePaperSettingsModal(); openPreview()",
+          class="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition flex items-center gap-1.5"
+        )
+          span Apply & Preview Paper →

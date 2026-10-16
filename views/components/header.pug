@@ -2,14 +2,20 @@
 header(class="no-print bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-30 shadow-md")
   div(class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between")
     div(class="flex items-center space-x-3")
-      div(class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-400 flex items-center justify-center shadow-inner")
-        svg(class="w-6 h-6 text-white", fill="none", stroke="currentColor", viewBox="0 0 24 24")
-          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z")
+      img(src="/images/logo.svg", alt="Logo", class="w-10 h-10 rounded-xl shadow-md shrink-0 hover:scale-105 transition-transform")
       div
         h1(class="text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-2")
           span Exam Paper Builder
-          span(class="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30") 3-Set Bank
-        p(class="text-xs text-slate-400 hidden sm:block") New M.V.M. Sr. Sec. School &bull; Bilingual Half-Yearly Generator
+          span(
+            class="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 truncate max-w-[170px]",
+            x-text="currentBlueprint.name || 'Question Bank Studio'"
+          )
+        p(class="text-xs text-slate-400 hidden sm:flex items-center gap-1.5 truncate max-w-lg mt-0.5")
+          span(class="truncate font-medium text-slate-300", x-text="customMeta.schoolName || 'School / Institution Name'")
+          span(class="opacity-40") &bull;
+          span(class="text-slate-300 shrink-0", x-text="customMeta.examType || 'Examination'")
+          span(class="opacity-40") &bull;
+          span(class="text-indigo-400 font-semibold shrink-0", x-text="customMeta.sessionYear || '2026 – 27'")
 
     // Actions
     div(class="flex items-center space-x-2 sm:space-x-3")
@@ -24,15 +30,29 @@ header(class="no-print bg-slate-900 border-b border-slate-800 text-white sticky 
         span(class="hidden xs:inline") + Create Question
         span(class="xs:hidden") + New Q
 
+      // Paper Settings button
+      button(
+        type="button",
+        @click="openPaperSettingsModal()",
+        class="px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition flex items-center gap-1.5 border border-slate-700 shadow-2xs"
+        title="Configure School Name, Exam Type, Session Year, Target Marks & Time"
+      )
+        svg(class="w-4 h-4 text-indigo-400", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M15 12a3 3 0 11-6 0 3 3 0 016 0z")
+        span(class="hidden sm:inline") Settings
+        span(class="sm:hidden") ⚙️
+
       // Saved papers button
       button(
         type="button",
         @click="openSavedPapers()",
-        class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1.5 border border-slate-700"
+        class="px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1.5 border border-slate-700"
       )
         svg(class="w-4 h-4", fill="none", stroke="currentColor", viewBox="0 0 24 24")
           path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4")
-        span Saved Papers
+        span(class="hidden xs:inline") Saved Papers
+        span(class="xs:hidden") Saved
         span(x-show="savedPapersCount > 0", x-text="savedPapersCount", class="ml-1 px-1.5 py-0.2 bg-indigo-500 text-white text-[10px] rounded-full")
 
       // Quick Presets Dropdown

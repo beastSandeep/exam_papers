@@ -1,5 +1,53 @@
 [
   {
+    "id": "paper_1792158419209",
+    "title": "Class 8 Science (विज्ञान)",
+    "subjectId": "8_science",
+    "questionIds": [
+      "8_sci_sec1_set_a_q2",
+      "8_sci_sec1_set_a_q3",
+      "8_sci_sec1_set_a_q4",
+      "8_sci_sec1_set_a_q5",
+      "8_sci_sec1_set_b_q3",
+      "8_sci_sec2_set_a_q2",
+      "8_sci_sec2_set_a_q5",
+      "8_sci_ch2_fib_1",
+      "8_sci_ch8_fib_2",
+      "8_sci_ch8_fib_4",
+      "8_sci_sec3_set_a_q4",
+      "8_sci_sec3_set_b_q1",
+      "8_sci_sec3_set_c_q2",
+      "8_sci_ch2_tf_6",
+      "8_sci_ch2_tf_7",
+      "8_sci_sec4_set_a_q1",
+      "8_sci_sec4_set_a_q2",
+      "8_sci_ch2_sa_4",
+      "8_sci_ch4_sa_2",
+      "8_sci_ch7_sa_4",
+      "8_sci_sec5_set_a_q5",
+      "8_sci_sec5_set_b_q4",
+      "8_sci_ch2_sa_8",
+      "8_sci_ch1_sa_14",
+      "8_sci_ch3_sa_11",
+      "8_sci_sec6_set_b_q1_alt",
+      "8_sci_ch5_sa_20"
+    ],
+    "customMeta": {
+      "schoolName": "",
+      "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
+      "setName": "",
+      "maxMarks": null,
+      "time": "2½ HOURS",
+      "includeInstructions": false,
+      "orPairs": {
+        "8_sci_sec6_set_b_q1_alt": "8_sci_ch3_sa_15",
+        "8_sci_ch5_sa_20": "8_sci_ch9_sa_10"
+      },
+      "customMarks": {}
+    },
+    "createdAt": "2026-10-16T13:46:59.209Z"
+  },
+  {
     "id": "paper_1791305813362",
     "title": "Class 6 Mathematics (गणित)",
     "subjectId": "6_maths",
@@ -29,7 +77,7 @@
       "6_maths_sec_e_set_c_q4_alt"
     ],
     "customMeta": {
-      "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
+      "schoolName": "",
       "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
       "setName": "",
       "maxMarks": null,
@@ -70,7 +118,7 @@
       "5_maths_sec_e_set_b_q3"
     ],
     "customMeta": {
-      "schoolName": "NEW M.V.M. SENIOR SECONDARY SCHOOL, ALWAR",
+      "schoolName": "",
       "examTitle": "HALF YEARLY EXAMINATION: 2026 – 27",
       "setName": "SET – A",
       "maxMarks": null,
